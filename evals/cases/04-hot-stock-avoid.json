@@ -1,0 +1,38 @@
+{
+  "name": "hot-stock-avoid",
+  "skills": ["research"],
+  "category_truth": "Avoid (hottest stock in hottest industry)",
+  "trap": true,
+  "trap_lesson": "The single type Lynch avoids above all. Glamour bids the price past any fundamental support, and a hot industry attracts competition that destroys the very margins everyone is chasing. Excitement is a yellow flag.",
+  "query": "Everyone says NOVA (NovaChip AI) is the next big thing and 'the next dominant chipmaker.' Research it using the given facts.",
+  "given_facts": {
+    "company": "NovaChip AI",
+    "ticker": "NOVA",
+    "as_of": "2026-06-06",
+    "business": "Maker of AI accelerator chips in the year's hottest, most-hyped industry; pitched as 'the next dominant chipmaker.'",
+    "price": 360.0,
+    "eps_ttm": 4.0,
+    "eps_history": {"2023": 0.60, "2024": 1.50, "2025": 3.90},
+    "dividend_per_share": 0.0,
+    "long_term_growth_estimate_pct": 80,
+    "growth_durability_note": "many well-funded competitors entering; pricing already softening",
+    "shares_outstanding_millions": 1500,
+    "total_debt_millions": 2000,
+    "cash_millions": 9000,
+    "institutional_ownership_pct": 92,
+    "analyst_coverage": "covered by virtually every major bank; widely owned",
+    "insider_buying": "heavy insider SELLING",
+    "buybacks": "none",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Identifies NOVA as the hottest stock in the hottest industry — the type Lynch warns against above all — and treats the excitement/hype as a yellow flag.",
+    "Flags the 'next [famous winner]' framing as a classic warning sign, not a reason to buy.",
+    "Computes P/E ~90 (360 / 4) and notes that even against 80% growth the price prices in flawless execution; growth at 80% is not durable.",
+    "Names the competitive dynamic: a hot industry attracts heavy competition that erodes the margins the price depends on.",
+    "Cites the red flags: ~92% institutional ownership (no room to be discovered, the opposite of a Lynch setup) and heavy insider SELLING.",
+    "Verdict is Avoid/Pass, justified by hype-over-fundamentals and fragile growth — NOT a Buy because the story is exciting.",
+    "Does not let a superficially-okay PEG (~1.1) override the qualitative avoid signals; explains why.",
+    "Numbers come from compute_valuation.py; every figure cites a source + as-of date."
+  ]
+}

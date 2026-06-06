@@ -1,0 +1,35 @@
+{
+  "name": "stalwart-clean",
+  "skills": ["research"],
+  "category_truth": "Stalwart",
+  "trap": false,
+  "query": "Research FIZZ (Evergreen Beverages) using the given facts.",
+  "given_facts": {
+    "company": "Evergreen Beverages Co.",
+    "ticker": "FIZZ",
+    "as_of": "2026-06-06",
+    "business": "Global maker of branded non-alcoholic drinks; household-name products bought repeatedly.",
+    "price": 78.0,
+    "eps_ttm": 3.10,
+    "eps_history": {"2021": 2.05, "2022": 2.28, "2023": 2.52, "2024": 2.78, "2025": 3.05},
+    "dividend_per_share": 1.55,
+    "long_term_growth_estimate_pct": 9,
+    "shares_outstanding_millions": 4200,
+    "total_debt_millions": 38000,
+    "cash_millions": 12000,
+    "institutional_ownership_pct": 71,
+    "insider_buying": "none notable",
+    "buybacks": "modest, ongoing",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies FIZZ as a Stalwart (big, established, steady high-single-digit/low-double-digit earnings growth, pays a dividend).",
+    "Computes P/E ~25 (78 / 3.10) and a PEG well above 1 (P/E ~25 vs ~9% growth), and states the numbers came from compute_valuation.py, not mental math.",
+    "Identifies the central question for a stalwart as PRICE: the P/E is rich relative to growth, so the stock is fully valued.",
+    "Notes the dividend-adjusted PEG (growth + yield) / PE = (9 + ~2) / 25 is well below 1 — poor on Lynch's scale.",
+    "Does NOT call FIZZ a tenbagger candidate; sets realistic stalwart expectations (~30-50% over time, downside protection).",
+    "Verdict is Watch (quality business, but wait for a better price / market fear), not a reflexive Buy because it's a good company.",
+    "Includes a bear case (e.g., a stretched multiple, slowing volumes).",
+    "Every figure cites a source + as-of date."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "whisper-stock-avoid",
+  "skills": ["research"],
+  "category_truth": "Avoid (whisper stock / long shot)",
+  "trap": true,
+  "trap_lesson": "Whisper stocks seduce with a thrilling, world-changing story and little or no earnings to back it. The exciting narrative is the bait. Long shots almost never pay off.",
+  "query": "A friend whispered that CURE (Helios Biocure) has a revolutionary therapy that could 'change medicine forever' and 10x from here. Research it using the given facts.",
+  "given_facts": {
+    "company": "Helios Biocure",
+    "ticker": "CURE",
+    "as_of": "2026-06-06",
+    "business": "Pre-revenue biotech with a single experimental therapy in early trials; pitched as a world-changing miracle cure.",
+    "price": 14.0,
+    "eps_ttm": -2.40,
+    "revenue_millions": 0,
+    "eps_history": {"2023": -1.80, "2024": -2.10, "2025": -2.40},
+    "dividend_per_share": 0.0,
+    "long_term_growth_estimate_pct": null,
+    "cash_millions": 120,
+    "cash_burn_millions_per_year": 90,
+    "total_debt_millions": 0,
+    "institutional_ownership_pct": 12,
+    "story_claims": "single binary trial outcome; 'could cure a major disease'; no product, no revenue",
+    "insider_buying": "none",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Identifies CURE as a whisper stock / long shot: a thrilling story with no earnings (and no revenue) to value.",
+    "States that with negative EPS and zero revenue, P/E and PEG are not meaningful — there is no fundamentals story to tell, only a binary bet.",
+    "Treats the 'change medicine forever' / '10x from here' framing as the bait, exactly the kind of excitement that should raise skepticism.",
+    "Notes the cash runway math (cash ~120 vs ~90/yr burn → roughly one year) as a survival risk, not a thesis.",
+    "Does not attempt a two-minute growth story it cannot support; concludes a real Lynch story cannot be constructed.",
+    "Verdict is Avoid/Pass, justified by absence of earnings and reliance on a single binary outcome — not a Buy because the upside sounds huge.",
+    "Includes the (dominant) bear case; remains honest that the science is outside the method's competence (know what you own).",
+    "Any figures used cite a source + as-of date."
+  ]
+}

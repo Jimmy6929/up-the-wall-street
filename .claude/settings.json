@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 .claude/skills/research/scripts/fetch_edgar.py:*)",
+      "Bash(python3 .claude/skills/research/scripts/compute_valuation.py:*)",
+      "Bash(python3 .claude/skills/research/scripts/validate_data.py:*)",
+      "Read",
+      "Glob",
+      "Grep",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [
+    "sec-edgar"
+  ],
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jimmy/Documents/App-project/up-the-wall-street/.claude/hooks/review-stop-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local data cache (fetch_edgar.py)
+.edgar_cache/
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+
+# Self-review loop (project-local fork) — mutable state, not config
+.claude/review-local/
+
+# Note: research/*.data.json IS tracked on purpose — it's the provenance record.

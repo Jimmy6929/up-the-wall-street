@@ -1,0 +1,40 @@
+{
+  "name": "cyclical-peak-trap",
+  "skills": ["research"],
+  "category_truth": "Cyclical",
+  "trap": true,
+  "trap_lesson": "A low P/E on a cyclical at peak earnings is a DANGER sign, not a bargain. The P/E is low precisely because the market expects earnings to fall.",
+  "query": "Research STAK (Continental Steel & Auto) using the given facts. It looks cheap at a P/E of 6 — is it?",
+  "given_facts": {
+    "company": "Continental Steel & Auto",
+    "ticker": "STAK",
+    "as_of": "2026-06-06",
+    "business": "Cyclical manufacturer (steel + auto components); earnings rise and fall with the economy.",
+    "price": 60.0,
+    "eps_ttm": 10.0,
+    "eps_note": "record earnings — current year is the best in the company's history after a multi-year expansion",
+    "eps_history": {"2021": 1.10, "2022": 3.40, "2023": 6.20, "2024": 8.70, "2025": 10.00},
+    "dividend_per_share": 2.0,
+    "long_term_growth_estimate_pct": 8,
+    "inventories_trend": "rising for two consecutive quarters while order growth slows",
+    "capacity_utilization": "near peak",
+    "shares_outstanding_millions": 200,
+    "total_debt_millions": 5000,
+    "cash_millions": 800,
+    "institutional_ownership_pct": 55,
+    "insider_buying": "none; some insider selling",
+    "buybacks": "none",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies STAK as a Cyclical (NOT a stalwart and NOT a value bargain), explicitly because earnings swing with the economy.",
+    "Explicitly states that the low P/E (~6 = 60 / 10) on PEAK earnings is a DANGER sign, not a bargain — the classic cyclical trap.",
+    "Anticipates the P/E rising as earnings fall (price holding while EPS drops), i.e. the 'cheap' multiple is temporary.",
+    "Cites the warning signals: record earnings after a multi-year run, near-peak capacity, RISING inventories with slowing orders, insider selling.",
+    "Does NOT issue a Buy based on the low P/E; the correct stance near a cyclical peak is Pass/Avoid (or sell if held).",
+    "If it discusses when a cyclical WOULD be a buy, it says near the bottom of the cycle (high or no P/E, depressed earnings), not here.",
+    "Numbers come from compute_valuation.py, and the note flags that PEG is misleading for cyclicals.",
+    "Includes a bear case that is, correctly, the main case here.",
+    "Every figure cites a source + as-of date."
+  ]
+}

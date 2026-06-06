@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sec-edgar": {
+      "command": "uvx",
+      "args": ["sec-edgar-mcp"],
+      "env": {
+        "SEC_EDGAR_USER_AGENT": "Up the Wall Street research-agent (set-your-contact@example.com)"
+      }
+    }
+  }
+}

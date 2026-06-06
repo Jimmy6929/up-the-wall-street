@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "identity": "see CLAUDE.md",
+  "codePaths": ["**/*.py", "*.py"],
+  "hardSignals": { "autodetect": true },
+  "judgeModel": "inherit",
+  "maxAttempts": 2
+}

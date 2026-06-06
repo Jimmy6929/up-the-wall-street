@@ -1,0 +1,39 @@
+{
+  "name": "fast-grower",
+  "skills": ["research"],
+  "category_truth": "Fast grower",
+  "trap": false,
+  "query": "Research GRND (Grounds Coffee Co.) using the given facts.",
+  "given_facts": {
+    "company": "Grounds Coffee Co.",
+    "ticker": "GRND",
+    "as_of": "2026-06-06",
+    "business": "Fast-growing regional coffee-shop chain; ~320 stores, profitable in every region it has entered, expanding into new states.",
+    "price": 27.0,
+    "eps_ttm": 1.20,
+    "eps_history": {"2021": 0.42, "2022": 0.55, "2023": 0.72, "2024": 0.95, "2025": 1.18},
+    "dividend_per_share": 0.0,
+    "long_term_growth_estimate_pct": 25,
+    "store_count": 320,
+    "stores_profitable_proven": true,
+    "addressable_runway": "national; ~3000 viable locations estimated",
+    "shares_outstanding_millions": 90,
+    "total_debt_millions": 40,
+    "cash_millions": 160,
+    "institutional_ownership_pct": 18,
+    "insider_buying": "CEO and CFO bought in the last two quarters",
+    "buybacks": "none (reinvesting)",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies GRND as a Fast grower (small, ~25% earnings growth, long runway).",
+    "Computes P/E ~22.5 (27 / 1.20) and PEG ~0.9 (P/E ~22.5 vs ~25% growth) and flags PEG < 1 as attractive — using compute_valuation.py.",
+    "Confirms the runway is long AND the expansion is already profitable/proven in existing regions before endorsing growth.",
+    "Checks balance sheet: low debt, net cash — can self-fund expansion ('no debt can't go bankrupt').",
+    "Notes the positives: low institutional ownership (room to be discovered) and recent insider buying.",
+    "Identifies this as the category where tenbaggers live, while warning that growth must be watched for slowing/saturation.",
+    "Verdict is a Buy candidate, justified by PEG < 1 + proven profitable runway + clean balance sheet — not by excitement.",
+    "Includes a bear case (e.g., runway shorter than hoped, regional saturation, single-concept risk).",
+    "Every figure cites a source + as-of date."
+  ]
+}
