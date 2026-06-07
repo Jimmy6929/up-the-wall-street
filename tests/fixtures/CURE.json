@@ -1,0 +1,16 @@
+{
+  "ticker": "CURE",
+  "company": "CureAll Bio (pre-revenue, loss-making)",
+  "eps_history": {"2021": -0.50, "2022": -0.40, "2023": -0.45, "2024": -0.30, "2025": -0.20},
+  "eps_ttm": -0.20,
+  "price": 12.0,
+  "price_as_of": "2026-06-05",
+  "price_source": "fixture",
+  "dividend_per_share": 0.0,
+  "shares_outstanding": 60000000,
+  "total_debt": 0,
+  "cash": 300000000,
+  "n_share_classes": 1,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025"
+}

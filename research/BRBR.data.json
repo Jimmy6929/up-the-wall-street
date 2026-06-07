@@ -1,0 +1,71 @@
+{
+  "ticker": "BRBR",
+  "company": "BellRing Brands, Inc.",
+  "cik": 1772016,
+  "category": "Fast grower",
+  "as_of": "2026-06-07",
+  "source": "SEC EDGAR companyfacts CIK0001772016 + hand-sourced web (price, growth, ownership)",
+  "inputs": {
+    "price": {
+      "value": 8.77,
+      "source": "stockanalysis.com/stocks/brbr (NYSE close)",
+      "as_of": "2026-06-05"
+    },
+    "eps_ttm": {
+      "value": 1.29,
+      "source": "SEC EDGAR diluted EPS, TTM Apr2025-Mar2026 = FY2025 full (1.68; 10-K end 2025-09-30) - FY2025 H1 (Q1 0.59 + Q2 0.45 = 1.04) + FY2026 H1 (0.65; 10-Q end 2026-03-31). Cross-checks to 4-quarter sum (0.16+0.48+0.36+0.29=1.29).",
+      "as_of": "2026-03-31"
+    },
+    "eps_history": {
+      "value": {
+        "2021": 0.70,
+        "2022": 0.88,
+        "2023": 1.23,
+        "2024": 1.86,
+        "2025": 1.68
+      },
+      "source": "SEC EDGAR companyfacts CIK0001772016 (EarningsPerShareDiluted, FY ending ~Sep 30; from 10-K filings)",
+      "as_of": "FY2021-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "No CommonStockDividendsPerShareDeclared concept in SEC EDGAR; stockanalysis.com/Nasdaq show no dividend history. BellRing pays no dividend.",
+      "as_of": "2026-06-07"
+    },
+    "shares_outstanding": {
+      "value": 116277850,
+      "source": "SEC EDGAR dei:EntityCommonStockSharesOutstanding (10-Q cover, filed 2026-05-05)",
+      "as_of": "2026-04-28"
+    },
+    "total_debt": {
+      "value": 1185000000,
+      "source": "SEC EDGAR companyfacts CIK0001772016 (LongTermDebtNoncurrent + LongTermDebtCurrent)",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 32600000,
+      "source": "SEC EDGAR companyfacts CIK0001772016 (CashAndCashEquivalentsAtCarryingValue)",
+      "as_of": "2026-03-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": 12.4,
+      "source": "Simply Wall St analyst consensus forward EPS growth (~12.4%/yr); ESTIMATE - favor proven growth. Note: analysts likely cutting after Q2 FY2026 EPS miss.",
+      "as_of": "2026-05"
+    },
+    "institutional_ownership_pct": {
+      "value": 94.97,
+      "source": "MarketBeat institutional ownership (2026 13F aggregates)",
+      "as_of": "2026-05"
+    },
+    "insider_activity": {
+      "value": "No notable recent insider buying found. Company actively repurchasing: new $300M authorization effective 2025-03-07 (2-yr); in FY2026 H1 bought 4.2M shares for $123.1M (~$29 avg), ~$516.9M remaining under authorization (Q2 FY2026 10-Q, end 2026-03-31). Shares O/S fell from ~128.3M (Jan 2025) to ~116.3M (Apr 2026).",
+      "source": "SEC EDGAR 10-Q (filed 2026-05-05) + StockTitan; BellRing IR FY2025 release",
+      "as_of": "2026-03-31"
+    },
+    "buybacks": {
+      "value": "$300M authorization (effective 2025-03-07, 2-yr term); ~$516.9M total remaining across authorizations; 4.2M shares repurchased in FY2026 H1.",
+      "source": "BellRing Q2 FY2026 10-Q + StockTitan buyback news",
+      "as_of": "2026-03-31"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "ticker": "CYC",
+  "company": "Cyclone Materials (down-year zig-zag)",
+  "eps_history": {"2021": 3.00, "2022": 4.00, "2023": 2.50, "2024": 4.50, "2025": 5.00},
+  "eps_ttm": 5.00,
+  "price": 40.0,
+  "price_as_of": "2026-06-05",
+  "price_source": "fixture",
+  "dividend_per_share": 0.50,
+  "shares_outstanding": 80000000,
+  "total_debt": 600000000,
+  "cash": 100000000,
+  "n_share_classes": 1,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025"
+}

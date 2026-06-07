@@ -64,22 +64,18 @@ def cagr_pct(history):
     return ((v1 / v0) ** (1 / years) - 1) * 100
 
 
-def main():
-    ap = argparse.ArgumentParser(description="Deterministic Lynch valuation math.")
-    ap.add_argument("data", nargs="?", default="-",
-                    help="path to data JSON; omit or '-' to read stdin")
-    ap.add_argument("--category", default=None,
-                    help="category override (e.g. Cyclical) for caveat flags")
-    args = ap.parse_args()
+def compute(data, category=None):
+    """Deterministic Lynch valuation from a resolved facts dict.
 
-    raw = sys.stdin.read() if args.data == "-" else open(args.data).read()
-    doc = json.loads(raw)
-    # Resolve fields from a nested block: eval fixtures use `given_facts`,
-    # fetch_edgar.py output uses `inputs`. Top-level keys win if neither exists.
-    data = doc.get("given_facts") or doc.get("inputs") or doc
+    `data` is the facts block (already unwrapped from given_facts/inputs/doc by
+    the caller); `category` is an optional category string (e.g. "Cyclical")
+    used only for caveat flags. Returns the metrics dict.
 
-    category = (args.category or doc.get("category")
-                or get_value(data, "category") or "").strip().lower()
+    This is the single source of truth for the math: both the CLI (`main`) and
+    the universe screener (`universe_screen.py`) call it, so a market-wide
+    screen and a /research note can never disagree on a number.
+    """
+    category = (category or "").strip().lower()
 
     price = get_value(data, "price")
     eps_ttm = get_value(data, "eps_ttm")
@@ -189,7 +185,24 @@ def main():
         "peg": "~1 fair, ~0.5 great, ~2 overpriced",
         "dividend_adjusted_peg": "<1 poor, 1.5 ok, >=2 excellent",
     }
-    print(json.dumps(out, indent=2))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Deterministic Lynch valuation math.")
+    ap.add_argument("data", nargs="?", default="-",
+                    help="path to data JSON; omit or '-' to read stdin")
+    ap.add_argument("--category", default=None,
+                    help="category override (e.g. Cyclical) for caveat flags")
+    args = ap.parse_args()
+
+    raw = sys.stdin.read() if args.data == "-" else open(args.data).read()
+    doc = json.loads(raw)
+    # Resolve fields from a nested block: eval fixtures use `given_facts`,
+    # fetch_edgar.py output uses `inputs`. Top-level keys win if neither exists.
+    data = doc.get("given_facts") or doc.get("inputs") or doc
+    category = args.category or doc.get("category") or get_value(data, "category")
+    print(json.dumps(compute(data, category), indent=2))
 
 
 if __name__ == "__main__":

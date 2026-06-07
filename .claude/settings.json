@@ -4,6 +4,7 @@
       "Bash(python3 .claude/skills/research/scripts/fetch_edgar.py:*)",
       "Bash(python3 .claude/skills/research/scripts/compute_valuation.py:*)",
       "Bash(python3 .claude/skills/research/scripts/validate_data.py:*)",
+      "Bash(python3 .claude/skills/research/scripts/universe_screen.py:*)",
       "Read",
       "Glob",
       "Grep",

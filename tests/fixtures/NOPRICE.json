@@ -1,0 +1,16 @@
+{
+  "ticker": "NOPX",
+  "company": "No-Price Holdings (good business, price unavailable)",
+  "eps_history": {"2021": 1.10, "2022": 1.30, "2023": 1.55, "2024": 1.85, "2025": 2.20},
+  "eps_ttm": 2.20,
+  "price": null,
+  "price_source": null,
+  "price_as_of": null,
+  "dividend_per_share": 0.0,
+  "shares_outstanding": 90000000,
+  "total_debt": 0,
+  "cash": 100000000,
+  "n_share_classes": 1,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025"
+}

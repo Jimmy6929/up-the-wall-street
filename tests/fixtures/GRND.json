@@ -1,0 +1,16 @@
+{
+  "ticker": "GRND",
+  "company": "Groundwork Supply Co. (clean fast grower)",
+  "eps_history": {"2021": 1.00, "2022": 1.25, "2023": 1.55, "2024": 1.95, "2025": 2.40},
+  "eps_ttm": 2.40,
+  "price": 50.0,
+  "price_as_of": "2026-06-05",
+  "price_source": "fixture",
+  "dividend_per_share": 0.0,
+  "shares_outstanding": 100000000,
+  "total_debt": 0,
+  "cash": 200000000,
+  "n_share_classes": 1,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025"
+}

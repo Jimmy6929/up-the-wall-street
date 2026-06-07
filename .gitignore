@@ -18,4 +18,7 @@ venv/
 # Self-review loop (project-local fork) — mutable state, not config
 .claude/review-local/
 
+# universe_screen.py --fixtures verification output (never the real sweep)
+scan-results.fixtures.md
+
 # Note: research/*.data.json IS tracked on purpose — it's the provenance record.

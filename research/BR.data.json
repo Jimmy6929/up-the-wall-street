@@ -1,0 +1,67 @@
+{
+  "ticker": "BR",
+  "company": "BROADRIDGE FINANCIAL SOLUTIONS, INC.",
+  "cik": 1383312,
+  "category": "Stalwart",
+  "source": "SEC EDGAR companyfacts CIK0001383312 (fundamentals) + web (price, growth est., ownership)",
+  "as_of": "2026-06-07",
+  "_note": "Fiscal year ends June 30. eps_ttm is a TRUE trailing-twelve-month figure = sum of the 4 most recent quarterly GAAP diluted-EPS facts: Q3FY26 2.36 + Q2FY26 2.42 + Q1FY26 1.40 + Q4FY25 1.17. Q4FY25 is DERIVED (FY2025 7.10 minus 9-month FY2025 3.93) because EDGAR has no discrete April-June 2025 quarterly fact. eps_history is GAAP diluted EPS by fiscal year from EDGAR. Broadridge also reports a company 'Adjusted EPS' that it guides to ~8-12%/yr; see adjusted_eps_note.",
+  "inputs": {
+    "price": {
+      "value": 151.34,
+      "source": "stockanalysis.com / Google Finance / Yahoo Finance - NYSE close",
+      "as_of": "2026-06-05"
+    },
+    "eps_ttm": {
+      "value": 7.35,
+      "source": "SEC EDGAR companyconcept EarningsPerShareDiluted - sum of 4 most recent quarters: Q3FY26 2.36 (end 2026-03-31) + Q2FY26 2.42 (end 2025-12-31) + Q1FY26 1.40 (end 2025-09-30) + Q4FY25 1.17 (derived: FY2025 7.10 minus 9mo-FY2025 3.93)",
+      "as_of": "2026-03-31 (TTM ending)"
+    },
+    "eps_history": {
+      "value": {
+        "2021": 4.65,
+        "2022": 4.55,
+        "2023": 5.3,
+        "2024": 5.86,
+        "2025": 7.1
+      },
+      "source": "SEC EDGAR companyfacts CIK0001383312 (EarningsPerShareDiluted, GAAP, full fiscal years ending June 30; confirmed against the ~365-day annual facts). Note: fetch_edgar.py initially returned FY2021=2.20, which is a single-QUARTER artifact (Apr-Jun 2021); the true full-year FY2021 GAAP diluted EPS is 4.65 per the EDGAR annual fact (2020-07-01 -> 2021-06-30).",
+      "as_of": "FY2021-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 3.9,
+      "source": "Broadridge 8-K dividend press release (May 21, 2026 declaration of $0.975/qtr) annualized = $0.975 x 4. Trailing FY2025 declared was $3.52 (EDGAR CommonStockDividendsPerShareDeclared).",
+      "as_of": "2026-05-21 (current quarterly rate annualized)"
+    },
+    "shares_outstanding": {
+      "value": 115700000,
+      "source": "SEC EDGAR companyfacts CIK0001383312 (CommonStockSharesOutstanding, 10-Q Q3FY26)",
+      "as_of": "2026-03-31"
+    },
+    "total_debt": {
+      "value": 3227000000,
+      "source": "SEC EDGAR companyfacts CIK0001383312 (LongTermDebt total = LongTermDebtNoncurrent 2727.2M + LongTermDebtCurrent 499.8M, 10-Q Q3FY26)",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 304800000,
+      "source": "SEC EDGAR companyfacts CIK0001383312 (CashAndCashEquivalentsAtCarryingValue, 10-Q Q3FY26)",
+      "as_of": "2026-03-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": 10.0,
+      "source": "Company guidance: FY2026 Adjusted EPS growth 10-12% (Q3FY26 8-K, Apr 30 2026) and long-term model of 8-12% adjusted EPS growth. Analyst consensus long-term EPS growth ~9.8-10.7% (Simply Wall St). Using 10% (conservative midpoint of proven adjusted trajectory).",
+      "as_of": "2026-04-30"
+    },
+    "institutional_ownership_pct": {
+      "value": 90.03,
+      "source": "MarketBeat institutional ownership page",
+      "as_of": "2026-06"
+    },
+    "insider_activity": {
+      "value": "No clean net insider transaction figure was sourced (individual Form 4s not aggregated). Company-level: repurchased $352.9M of treasury stock in 9mo FY2026 (active buyback); ~$248M net repurchases through Q2FY26. No insider-disposal data captured.",
+      "source": "Q3FY26 8-K cash flow statement; web (buyback). Individual Form 4 insider transactions not separately aggregated.",
+      "as_of": "2026-03-31"
+    }
+  }
+}

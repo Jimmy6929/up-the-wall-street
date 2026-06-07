@@ -27,11 +27,12 @@ In Claude Code, **launched from this repo**, run a slash command — or just ask
 | Command | What it does |
 |---|---|
 | `/research <TICKER>` | The full pipeline for **one** stock: classify → screen → script-computed numbers → two-minute story → skeptic/bear case → Buy / Watch / Pass verdict. Writes `research/<TICKER>.md` (+ `.data.json`). |
+| `/scan [tickers]` | Scan the **whole US market** (or a subset) for candidates: a deterministic EDGAR funnel ranks names by PEG, then a parallel green/red-flag screen recommends 1–3 for `/research`. Writes `scan-results.md`, appends *leads* (never verdicts) to `leads.md`. See [playbook/02a](playbook/02a-screen-at-scale.md). |
 | `/screen [tickers]` | Quick green-flag / red-flag triage over `leads.md` (or the tickers you pass) to decide what deserves a full run. |
 | `/recheck <TICKER>` | Re-test a holding's story, refresh the numbers, run the 3 monitoring questions → Hold / Add / Sell. Updates `watchlist.md` / `portfolio.md`. |
 | `/portfolio-review` | Whole-portfolio check: category balance, followability, watering-the-weeds, concentration, stale stories. |
 
-These are **separate** tools. `/research` runs one ticker end-to-end (it *includes* a screening step), but it does **not** run `/screen`, `/recheck`, or `/portfolio-review` — those are standalone. Typical cadence: jot ideas in `leads.md` → `/screen` to triage → `/research` the survivors → `/recheck` holdings (quarterly) → `/portfolio-review` for balance.
+These are **separate** tools. `/research` runs one ticker end-to-end (it *includes* a screening step), but it does **not** run `/screen`, `/recheck`, or `/portfolio-review` — those are standalone. Typical cadence: `/scan` the market (or jot ideas in `leads.md`) → `/screen` to triage → `/research` the survivors → `/recheck` holdings (quarterly) → `/portfolio-review` for balance. `/scan` emits **leads, not verdicts** — it's a live discovery screen (survivorship/look-ahead biased by construction), never a backtester or a buy signal.
 
 ## Layout
 
@@ -45,12 +46,14 @@ research/         output: one note + one .data.json per ticker
 watchlist.md      leads under consideration
 portfolio.md      recommended theses
 leads.md          raw idea intake (ch. 06)
+scan-results.md   latest /scan output (ranked candidates + manual-review + tallies)
+tests/fixtures/   offline records for the screener's trap tests
 ```
 
 ## Setup
 
-- **Python 3.10+** — the scripts use only the standard library (no `pip install`).
-- **Data:** `fetch_edgar.py` pulls exact figures directly from the free [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) (no key needed; SEC requires a contact string — set yours in `.mcp.json` / when prompted). Live prices come from web search. Anything missing, you can paste in.
+- **Python 3.10+** — the `/research` scripts (`fetch_edgar.py`, `compute_valuation.py`, `validate_data.py`) and all tests use only the standard library (no `pip install`). The **one** exception is `/scan`: `universe_screen.py` optionally uses `yfinance` for bulk prices (`pip install -r requirements.txt`); it's a lazy import and the screen degrades gracefully without it.
+- **Data:** `fetch_edgar.py` pulls exact figures directly from the free [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) (no key needed; SEC requires a contact string — set yours in `.mcp.json` / when prompted). Live prices come from web search. For the `/scan` funnel only, yfinance supplies bulk prices — **screening-only**, never cited as the price in a `/research` note (finalists are re-sourced by hand). Anything missing, you can paste in.
 - **Optional:** the [`sec-edgar-mcp`](https://github.com/stefanoamorelli/sec-edgar-mcp) server (configured in `.mcp.json`) lets the agent also read filing *text* and insider transactions interactively. It needs [`uv`](https://docs.astral.sh/uv/) (`uvx`). The deterministic script works without it.
 
 ## Provenance

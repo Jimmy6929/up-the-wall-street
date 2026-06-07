@@ -1,0 +1,11 @@
+# Core scripts (fetch_edgar.py, compute_valuation.py, validate_data.py) use only
+# the Python standard library — nothing here is needed for /research.
+#
+# OPTIONAL, screening-only: yfinance supplies bulk prices for `universe_screen.py`
+# / the `/scan` funnel. universe_screen.py imports it lazily and degrades
+# gracefully if it's absent (Stage A still runs; survivors without a price are
+# dropped and counted). yfinance prices are NEVER cited as the price in a
+# /research note — finalists are re-sourced by hand. Install only if you use /scan:
+#
+#   pip install -r requirements.txt
+yfinance>=0.2.40

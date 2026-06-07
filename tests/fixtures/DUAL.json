@@ -1,0 +1,16 @@
+{
+  "ticker": "DUAL",
+  "company": "Duality Media (multi-class shares)",
+  "eps_history": {"2021": 1.50, "2022": 1.70, "2023": 1.95, "2024": 2.20, "2025": 2.50},
+  "eps_ttm": 2.50,
+  "price": 55.0,
+  "price_as_of": "2026-06-05",
+  "price_source": "fixture",
+  "dividend_per_share": 0.0,
+  "shares_outstanding": 120000000,
+  "total_debt": 200000000,
+  "cash": 400000000,
+  "n_share_classes": 2,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025"
+}

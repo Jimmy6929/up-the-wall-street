@@ -1,0 +1,17 @@
+{
+  "ticker": "STAK",
+  "company": "Stackpole Steel (cyclical at peak - monotone up)",
+  "eps_history": {"2021": 1.10, "2022": 2.50, "2023": 5.00, "2024": 8.00, "2025": 10.00},
+  "eps_ttm": 10.00,
+  "price": 60.0,
+  "price_as_of": "2026-06-05",
+  "price_source": "fixture",
+  "dividend_per_share": 1.00,
+  "shares_outstanding": 50000000,
+  "total_debt": 1200000000,
+  "cash": 150000000,
+  "n_share_classes": 1,
+  "fund_source": "fixture (EDGAR-shaped)",
+  "fund_as_of": "FY2025",
+  "_note": "Monotone-up to a cyclical peak. CAGR ~74% so it is set aside as 'unsustainable'. NOTE the limit: a SLOWER monotone cyclical (no down year, <50% CAGR) would NOT be caught here - that defense lives in the qualitative /screen step."
+}
