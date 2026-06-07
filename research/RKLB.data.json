@@ -1,0 +1,121 @@
+{
+  "ticker": "RKLB",
+  "company": "Rocket Lab Corp (Rocket Lab USA, Inc.)",
+  "cik": 1819994,
+  "category": "Fast grower (unprofitable / negative EPS)",
+  "source": "SEC EDGAR companyfacts CIK0001819994 + web sources (per-field)",
+  "as_of": "2026-06-05",
+  "_note": "EDGAR total_debt tag returned an incomplete $1.716M; corrected to the real interest-bearing debt (convertible notes + term loans) from balance-sheet source. Cash from EDGAR ($1,205.499M) matches stockanalysis.com ($1,206M). EPS history is all-negative so EPS CAGR and trailing P/E are not meaningful; the growth metric for this name is REVENUE growth.",
+  "inputs": {
+    "price": {
+      "value": 110.08,
+      "source": "stockanalysis.com/stocks/rklb (regular-session close)",
+      "as_of": "2026-06-05"
+    },
+    "eps_ttm": {
+      "value": -0.37,
+      "source": "SEC EDGAR companyfacts CIK0001819994 (EarningsPerShareDiluted, FY2025)",
+      "as_of": "FY2025"
+    },
+    "eps_history": {
+      "value": {
+        "2022": -0.29,
+        "2023": -0.38,
+        "2024": -0.38,
+        "2025": -0.37
+      },
+      "source": "SEC EDGAR companyfacts CIK0001819994 (EarningsPerShareDiluted, annual)",
+      "as_of": "FY2022-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "none found - company pays no dividend",
+      "as_of": "FY2025"
+    },
+    "shares_outstanding": {
+      "value": 575767500,
+      "source": "SEC EDGAR companyfacts CIK0001819994 (CommonStockSharesOutstanding); stockanalysis.com shows ~578.9M",
+      "as_of": "2026-03-31"
+    },
+    "total_debt": {
+      "value": 138670000,
+      "source": "stockanalysis.com/stocks/rklb balance sheet (total interest-bearing debt: 4.25% convertible senior notes due 2029 + Trinity term loan; declining as converts convert to equity). EDGAR's $1.716M XBRL tag was incomplete and was overridden.",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 1205499000,
+      "source": "SEC EDGAR companyfacts CIK0001819994 (CashAndCashEquivalentsAtCarryingValue); matches stockanalysis.com $1,206M. Note: cash + marketable securities total ~$1.48B per Q1-2026 8-K.",
+      "as_of": "2026-03-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": 51.3,
+      "source": "stockanalysis.com/stocks/rklb/forecast - consensus 2026 REVENUE growth (avg 51.3%, range 41.4-63.3%), 18 analysts (S&P Global). This is a revenue-growth estimate; EPS remains negative (2026 consensus EPS approx -0.12).",
+      "as_of": "2026-06-05"
+    },
+    "institutional_ownership_pct": {
+      "value": 50.18,
+      "source": "marketbeat.com / wallstreetzen RKLB ownership (50.18% institutional, ~29.3% insiders, ~20.5% retail)",
+      "as_of": "2026-06"
+    },
+    "insider_activity": {
+      "value": "net selling, heavy. Gross insider sales during the 2025-26 run-up: CEO Peter Beck >$140M (Dec 2025), CFO Adam Spice >$100M (Jan 2026) plus ~$8.9M (2026-05-26) and a ~$4.3M sell-to-cover (Mar 2026). Beck net -5.04M shares over 18 months. Net insider selling on the order of tens of millions TTM (~$41M cited by Simply Wall St aggregate). Much is under 10b5-1 plans, but the scale is large and one-directional into a ~400% price run-up.",
+      "source": "Nasdaq, Investing.com, GuruFocus, Simply Wall St / SEC Form 4 aggregates",
+      "as_of": "2026-05-30"
+    },
+    "analyst_price_target": {
+      "value": 103.91,
+      "source": "stockanalysis.com/stocks/rklb/forecast - 18-analyst average price target, BELOW the 2026-06-05 close of $110.08 (i.e., consensus models no upside from here)",
+      "as_of": "2026-06-05"
+    },
+    "ev_sales": {
+      "value": 104,
+      "source": "Alpha Spread (EV/Sales ~104x); P/S ~61x. Market cap ~$63-66B on ~$601.8M FY2025 revenue.",
+      "as_of": "2026-06-05"
+    },
+    "cash_burn_per_year": {
+      "value": 321800000,
+      "source": "FY2025 free cash flow approx -$321.8M (operating cash flow deficit + $156.3M capex) per stockanalysis.com cash-flow statement / macrotrends",
+      "as_of": "FY2025"
+    },
+    "revenue_fy2025": {
+      "value": 601800000,
+      "source": "RKLB FY2025 10-K / 8-K; +38.0% YoY",
+      "as_of": "FY2025"
+    },
+    "revenue_q1_2026": {
+      "value": 200300000,
+      "source": "RKLB Q1-2026 8-K/10-Q (three months ended 2026-03-31); up from $122.6M YoY = +63.5%",
+      "as_of": "2026-03-31"
+    },
+    "net_loss_fy2025": {
+      "value": -198200000,
+      "source": "RKLB FY2025 10-K; net margin approx -32.9%",
+      "as_of": "FY2025"
+    },
+    "net_loss_q1_2026": {
+      "value": -45000000,
+      "source": "RKLB Q1-2026 8-K (narrowed from -$60.6M YoY)",
+      "as_of": "2026-03-31"
+    }
+  },
+  "computed": {
+    "engine": "compute_valuation.py",
+    "pe": null,
+    "historical_growth_pct": null,
+    "forward_growth_estimate_pct": 51.3,
+    "growth_used_pct": 51.3,
+    "peg": null,
+    "dividend_yield_pct": 0.0,
+    "dividend_adjusted_peg": null,
+    "net_cash": 1066829000,
+    "net_cash_per_share": 1.85,
+    "cash_runway_years": 3.7,
+    "flags": ["negative_or_zero_earnings", "unsustainable_growth", "insider_selling"],
+    "notes": [
+      "EPS <= 0: P/E and PEG are not meaningful. There is no earnings-based valuation; any case rests on a binary/recovery/asset story (ch.13).",
+      "Growth >= 50% is rarely sustainable; discount it (ch.15).",
+      "Cash runway is a survival metric, not a thesis.",
+      "cash_runway_years uses cash-only (1.205B) over FY2025 burn (321.8M); counting ~1.48B total liquidity (cash + marketable securities) and the narrowing loss, effective runway is longer."
+    ]
+  }
+}

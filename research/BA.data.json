@@ -1,0 +1,125 @@
+{
+  "ticker": "BA",
+  "company": "The Boeing Company",
+  "cik": 12927,
+  "category": "Cyclical",
+  "source": "SEC EDGAR companyfacts CIK0000012927 + Boeing Q4/FY2025 earnings release (10-K, FY ended 2025-12-31) + web sources noted per field",
+  "as_of": "2025-12-31",
+  "_note": "Turnaround/cyclical aerospace. FY2025 was the recovery year: Boeing RETURNED TO PROFIT (net income +$2.235B, diluted EPS +$2.48) after 2021-2024 losses, so trailing P/E IS computable but a single recovery year is thin and the brief's 'still negative EPS' premise is outdated. Balance sheet headline figures use the date-consistent YE2025 10-K set (cash+marketable securities $29.4B; consolidated debt $54.1B). EDGAR's narrow XBRL tags gave cash-only $9.441B and LongTermDebt+DebtCurrent $49.817B as of 2026-03-31 (Q1 10-Q) - recorded in notes as a cross-check, not used for the headline. EDGAR's dividend_per_share=$8.22 is a STALE/historical tag; Boeing's COMMON dividend has been suspended since 2020 and remains $0 - overridden to 0.",
+  "inputs": {
+    "price": {
+      "value": 215.79,
+      "source": "Web search (Yahoo Finance / market quote), most recent close",
+      "as_of": "2026-06-04"
+    },
+    "eps_ttm": {
+      "value": 2.48,
+      "source": "SEC EDGAR companyfacts CIK0000012927 (EarningsPerShareDiluted, FY2025) + Boeing Q4/FY2025 earnings release; GAAP diluted EPS",
+      "as_of": "2025-12-31"
+    },
+    "eps_history": {
+      "value": {
+        "2021": -7.15,
+        "2022": -8.30,
+        "2023": -3.67,
+        "2024": -18.36,
+        "2025": 2.48
+      },
+      "source": "SEC EDGAR companyfacts CIK0000012927 (EarningsPerShareDiluted, annual GAAP)",
+      "as_of": "FY2021-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "Boeing common-stock dividend SUSPENDED since 2020 and not reinstated as of 2026 (Boeing earnings releases / 10-K). EDGAR's $8.22 tag is stale historical data; overridden to 0.",
+      "as_of": "2026-06-04"
+    },
+    "shares_outstanding": {
+      "value": 1012261159,
+      "source": "SEC EDGAR companyfacts CIK0000012927 (CommonStockSharesOutstanding)",
+      "as_of": "2025-12-31"
+    },
+    "total_debt": {
+      "value": 54100000000,
+      "source": "Boeing Q4/FY2025 earnings release - consolidated debt $54.1B at YE2025 (short-term + LT debt and capital leases, $8,796M + $45,637M = $54,433M per 10-K; release rounds to $54.1B). EDGAR LongTermDebt+DebtCurrent = $49.817B as of 2026-03-31 (Q1 10-Q, narrower tags) - cross-check.",
+      "as_of": "2025-12-31"
+    },
+    "cash": {
+      "value": 29400000000,
+      "source": "Boeing Q4/FY2025 earnings release - cash AND marketable securities $29.4B at YE2025. EDGAR CashAndCashEquivalentsAtCarryingValue = $9.441B (cash only, narrower) as of 2026-03-31 - cross-check.",
+      "as_of": "2025-12-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": null,
+      "source": "Forward EPS consensus exists ($0.45-0.47 FY2026e, ~$4.30 FY2027e per analyst consensus via Yahoo/StockAnalysis) but a clean multi-year LT growth % is n/m off a single recovery year and a near-zero 2026 base; left null - documented in notes rather than fabricating a rate.",
+      "as_of": "2026-06-04"
+    },
+    "institutional_ownership_pct": {
+      "value": 73,
+      "source": "Web search - Nasdaq via TheStreet, ~73% institutional ownership",
+      "as_of": "2026-04"
+    },
+    "insider_activity": {
+      "value": "net selling (~$6.1M sold vs ~$1.4M bought, ~4.4:1, trailing 12 months)",
+      "source": "Web search - MarketBeat BA insider trades, trailing 12 months",
+      "as_of": "2026-06"
+    },
+    "revenue_fy2025": {
+      "value": 89500000000,
+      "source": "Boeing FY2025 earnings release - $89.5B, +34% YoY (deliveries 600 vs 348)",
+      "as_of": "2025-12-31"
+    },
+    "revenue_q1_2026": {
+      "value": 22200000000,
+      "source": "Boeing Q1-2026 earnings release - $22.2B, +14% YoY (143 deliveries)",
+      "as_of": "2026-03-31"
+    },
+    "net_income_fy2025": {
+      "value": 2235000000,
+      "source": "Boeing FY2025 earnings release - GAAP net income +$2.235B (first profit after 2021-2024 losses)",
+      "as_of": "2025-12-31"
+    },
+    "free_cash_flow": {
+      "value": -1877000000,
+      "source": "Boeing FY2025 FCF -$1.877B (still burning but narrowing; Q4-2025 FCF turned positive +$0.375B; Q1-2026 FCF -$1.5B seasonally weak). Trajectory improving.",
+      "as_of": "2025-12-31"
+    },
+    "stockholders_equity": {
+      "value": 5500000000,
+      "source": "Boeing YE2025 balance sheet - equity turned positive ~+$5.5B after years of deficit; thin for the size but no longer negative.",
+      "as_of": "2025-12-31"
+    },
+    "backlog": {
+      "value": 695000000000,
+      "source": "Boeing earnings releases - $682B at YE2025 (>6,100 jets); record $695B at Q1-2026.",
+      "as_of": "2026-03-31"
+    },
+    "production_rate_737": {
+      "value": 42,
+      "source": "Boeing - 737 MAX production raised to 42/month in Q4-2025 (from stabilized 38) with FAA approval; the central recovery lever.",
+      "as_of": "2025-12-31"
+    },
+    "forward_eps_consensus": {
+      "value": {"FY2026e": 0.46, "FY2027e": 4.30},
+      "source": "Analyst consensus via Yahoo / StockAnalysis - FY2026e ~$0.45-0.47, FY2027e ~$4.30 (estimate; steep modeled recovery, treat as hoped-for not proven)",
+      "as_of": "2026-06"
+    }
+  },
+  "computed": {
+    "engine": "compute_valuation.py",
+    "pe": 87.01,
+    "historical_growth_pct": null,
+    "forward_growth_estimate_pct": null,
+    "growth_used_pct": null,
+    "peg": null,
+    "dividend_yield_pct": 0.0,
+    "dividend_adjusted_peg": null,
+    "net_cash": -24700000000,
+    "net_cash_per_share": -24.4,
+    "flags": ["cyclical_caveat", "insider_selling"],
+    "notes": [
+      "CYCLICAL: a low P/E on peak earnings is a DANGER sign, not a bargain (ch.15). Here the P/E is HIGH (87) on early-recovery earnings - the inverse situation; judge by cycle position, capacity, inventories, not PEG.",
+      "PEG and dividend-adjusted PEG are n/a - no clean positive growth rate (sign change from losses to profit).",
+      "net_cash is NEGATIVE: net DEBT of -$24.7B (-$24.4/share). This is a leveraged turnaround, the opposite of a Lynch net-cash cushion. The crux is debt survivability + recovery durability."
+    ]
+  }
+}
