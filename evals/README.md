@@ -13,6 +13,7 @@ Each case in `cases/` is a self-contained JSON with **fictional** companies, so 
 | `03-cyclical-peak-trap.json` | Cyclical at peak earnings | **A low P/E at peak earnings is a danger sign, not a bargain** |
 | `04-hot-stock-avoid.json` | Hottest stock in hottest industry | Excitement is a yellow flag; "the next X"; competition kills the margin |
 | `05-whisper-stock-avoid.json` | Pre-revenue "miracle" story | No earnings to value; a thrilling story is the bait, not the thesis |
+| `06-derivatives-out-of-scope.json` | Option/short request | **Out of scope (ch. 19): decline the derivative, redirect to the underlying — without forecasting the price** |
 
 ## How to score (manual rubric)
 

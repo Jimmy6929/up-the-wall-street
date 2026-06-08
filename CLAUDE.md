@@ -12,6 +12,8 @@ The full pipeline is the `research` skill (`/research <TICKER>`). It walks the p
 
 To **discover** names across the market rather than research one you already named, the `scan` skill (`/scan`) runs a deterministic funnel ([playbook/02a](playbook/02a-screen-at-scale.md)) that ends in **leads**, which then enter the pipeline above. A scan is a screen, not a verdict.
 
+The book is three modes, not 21 linear steps — **always-on gates** (Part I + ch 18/20), the **per-stock pipeline** (Part II), and **ongoing habits** (Part III). The chapter-by-chapter mapping (which chapter lives where, and how faithfully) is tracked in [playbook/00a-book-map.md](playbook/00a-book-map.md), enforced by `tests/test_book_map.py`.
+
 ## Non-negotiable rules (the gates)
 @playbook/00-mindset-gates.md
 
@@ -33,4 +35,4 @@ Data path with graceful degradation: **SEC EDGAR script → web search → ask t
 A note passes only if it has: the correct **category**; script-computed **numbers** with sources; a plain-language **two-minute drill**; an independent **bear case**; the category-specific **checklist**; and a fundamentals-justified **verdict**. These are exactly what the `evals/` cases check — when in doubt, run a relevant eval case.
 
 ## Scope
-US-listed equities Lynch's method can analyze. Pre-revenue/binary-outcome bets (e.g., early biotech) are legitimately **out of scope** — say so rather than fabricate a story ("know what you own").
+US-listed equities Lynch's method can analyze. Pre-revenue/binary-outcome bets (e.g., early biotech) are legitimately **out of scope** — say so rather than fabricate a story ("know what you own"). **Derivatives — options, futures, shorting — are also out of scope** (ch. 19, gate 10): decline the derivative and redirect to researching the underlying business.

@@ -18,6 +18,7 @@ tags: [research, <category-slug>]
 
 ## 1. Lead (ch. 06)
 Where this came from, and the reminder that a lead is not a buy signal.
+**Firsthand observation (ch. 12):** <what you can see that the screen can't — product, store, usage, an industry contact — or "none; sourced from the screen/numbers">.
 
 ## 2. Classification (ch. 07)
 **Category:** <…> — <one-sentence reason from size + growth + economic sensitivity>.
@@ -60,6 +61,9 @@ Where this came from, and the reminder that a lead is not a buy signal.
 ## 8. Verdict & sell triggers
 **Verdict:** <…>, justified by <fundamentals only>.
 **Sell triggers (set in advance):** <the specific story developments that would make you exit — by category>.
+
+> [!note] Mirror test — your call, not the research's (ch. 04)
+> *Only if the verdict is **Buy candidate**.* Before acting, answer for yourself: can you hold through a 30–50% drawdown without panic-selling? Is this money you won't need soon? Can you ignore the price for years? This is temperament, not analysis — it does **not** change the fundamentals verdict above, and the agent does not score it.
 
 ## Sources
 - <every external figure: where it came from + as-of date>

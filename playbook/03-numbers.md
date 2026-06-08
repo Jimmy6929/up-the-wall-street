@@ -5,6 +5,13 @@
 
 **Earnings drive prices.** Over time a stock's price follows its earnings. So the core questions are: how fast are earnings growing, how durable is that growth, and what are you paying for it?
 
+## Getting the facts (ch. 12) — the source ladder
+
+Before the numbers can be computed, they have to be *gotten* — and where you get them is itself part of Lynch's edge. Two ladders, used together:
+
+- **Hard figures (what the scripts need):** SEC EDGAR script → web search → ask the user to paste. This is the deterministic path; every figure records its source + as-of date, and a missing figure is stated, never guessed.
+- **Lynch's own legwork (the amateur's advantage):** the **annual report / 10-K** (read it, especially the footnotes and the balance sheet), **investor relations** (you can literally call and ask why earnings grew), and **kicking the tires** — your own firsthand observation of the product, the store, the parking lot, people in the industry. This is the firsthand evidence captured in the [Lead step](../.claude/skills/research/SKILL.md) (ch. 06): note what *you* can see that the screen can't. It is legitimate for this to be "none — sourced from the screen/numbers"; Lynch finds names both ways. But when firsthand evidence exists, it is a real input, not decoration.
+
 ## The numbers that matter (and how to read them)
 
 ### P/E ratio — the price of earnings

@@ -11,7 +11,7 @@ The agent's reasoning lives in markdown — a stack of `playbook/` files (the me
 
 Every stock runs through Lynch's pipeline, in order:
 
-1. **Gate** (ch. 00–05) — refuse market timing; judge the business, not the price; a lead is not a buy signal.
+1. **Gate** (ch. 00–05, 19) — refuse market timing; judge the business, not the price; a lead is not a buy signal; decline derivatives and redirect to the underlying.
 2. **Classify** (ch. 07) — sort into one of the [Six Categories](playbook/01-classify.md); a giant can't be a tenbagger.
 3. **Screen** (ch. 08–09) — green flags vs. red flags; excitement is a *yellow* flag.
 4. **Numbers** (ch. 10–13) — fetched and computed by code, never by the model: PEG, dividend-adjusted PEG, cash vs. debt, earnings record. Every figure carries a **source + as-of date**.
@@ -19,6 +19,8 @@ Every stock runs through Lynch's pipeline, in order:
 6. **Skeptic** (ch. 09/20) — an independent agent tries to refute the thesis.
 7. **Verdict** (ch. 15) — a category-specific checklist → Buy candidate / Watchlist / Pass.
 8. **Monitor** (ch. 14/17) — `/recheck` re-runs the story; sell only when it breaks, never on price/fear/boredom.
+
+The chapter→step mapping (gates / pipeline / ongoing) is tracked as a living artifact in [`playbook/00a-book-map.md`](playbook/00a-book-map.md) and enforced by `tests/test_book_map.py`, so a chapter can't silently lose its home.
 
 ## Usage
 
@@ -38,6 +40,7 @@ These are **separate** tools. `/research` runs one ticker end-to-end (it *includ
 
 ```
 playbook/         the method, as editable markdown (the "Gstack")
+playbook/00a-book-map.md   chapter→step traceability (gates/pipeline/ongoing), test-enforced
 templates/        research-note template (every number cites a source)
 evals/            labeled cases the agent must pass (incl. adversarial traps)
 .claude/skills/   the pipeline + scripts, surfaced as slash commands
