@@ -49,9 +49,19 @@ research/         output: one note + one .data.json per ticker
 watchlist.md      leads under consideration
 portfolio.md      recommended theses
 leads.md          raw idea intake (ch. 06)
-scan-results.md   latest /scan output (ranked candidates + manual-review + tallies)
+scan-results.md   latest full-universe /scan output (ranked candidates + manual-review + tallies)
+scan-results.fixtures.md   offline --fixtures verification output (never overwrites the real sweep)
 tests/fixtures/   offline records for the screener's trap tests
+scripts/verify    one local gate: tests + schema/provenance + markdown source coverage
 ```
+
+### Scan artifacts (fixed names, never crossed)
+
+A full-universe `/scan` writes **`scan-results.md`**. An offline `--fixtures` verification run writes **`scan-results.fixtures.md`** — it is offline by contract and must **never** clobber the real sweep's `scan-results.md` (regression-pinned by `tests/test_universe_screen.py`). `scan-results.sample.md` is reserved for a future small live sample (no `--sample` mode today).
+
+### Verifying the repo
+
+Run **`scripts/verify`** before trusting the repo (or after touching scripts, data, or notes). It runs the unit-test suites (both roots), the bulk **schema/provenance gate** (`validate_data.py research/*.data.json`, which *fails closed* — a `.data.json` with a missing required field or an unsourced value cannot pass), and an advisory **markdown source/as-of coverage** check (`check_research_markdown.py`). Tests + schema block; markdown is warn-only until tuned.
 
 ## Setup
 

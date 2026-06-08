@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# verify - the single "can this repo still be trusted?" gate.
+#
+# Blocking (exit 1 on failure): the unit-test suites (both roots) and the bulk
+# schema/provenance gate over every research/*.data.json. Advisory (never
+# blocks): the markdown source/as-of coverage check, run with --warn-only so its
+# findings print but a young checker can't block work before it's tuned. Promote
+# it to blocking by dropping --warn-only once it's proven low-noise.
+#
+# Usage:  scripts/verify        (run from anywhere; it cd's to the repo root)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+SCRIPTS=".claude/skills/research/scripts"
+
+echo "== unittest: research scripts =="
+python3 -m unittest discover -s "$SCRIPTS" -p 'test_*.py'
+
+echo "== unittest: tests/ =="
+python3 -m unittest discover -s tests -p 'test_*.py'      # split root (test_book_map.py)
+
+echo "== schema/provenance gate: research/*.data.json =="
+python3 "$SCRIPTS/validate_data.py" research/*.data.json
+
+echo "== markdown source/as-of coverage (advisory) =="
+python3 "$SCRIPTS/check_research_markdown.py" --warn-only research/*.md
+
+echo
+echo "ALL BLOCKING CHECKS PASSED"

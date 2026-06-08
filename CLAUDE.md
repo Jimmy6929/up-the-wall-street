@@ -30,9 +30,13 @@ Data path with graceful degradation: **SEC EDGAR script → web search → ask t
 - Research notes go in `research/<TICKER>.md` (from `templates/research-note.md`); keep the `research/<TICKER>.data.json` beside it as the provenance record.
 - Update `watchlist.md`, `portfolio.md`, and `leads.md` as theses change.
 - Verdicts are justified **only** by fundamentals (category, earnings growth, PEG/valuation, balance sheet, story, risks) — never by price action, momentum, "the next [winner]", the excitement of the story, or any market/economic forecast.
+- **Scan artifacts use fixed, never-crossed names:** a full-universe `/scan` writes `scan-results.md`; an offline `--fixtures` run writes `scan-results.fixtures.md` and must never clobber the real sweep; `scan-results.sample.md` is reserved for a future live sample.
 
 ## Definition of done (for a research run)
 A note passes only if it has: the correct **category**; script-computed **numbers** with sources; a plain-language **two-minute drill**; an independent **bear case**; the category-specific **checklist**; and a fundamentals-justified **verdict**. These are exactly what the `evals/` cases check — when in doubt, run a relevant eval case.
+
+## Verification (mechanical gate)
+Run **`scripts/verify`** before trusting the repo (or after changing scripts, data, or notes): unit-test suites + the bulk **schema/provenance gate** (`validate_data.py research/*.data.json`) + an advisory **markdown source/as-of coverage** check (`check_research_markdown.py`). The schema gate **fails closed** — a `.data.json` with a missing required field (`price`, `eps_ttm`) or an unsourced value cannot pass, so the "never fabricate a number" rule is mechanically enforced, not just asked for.
 
 ## Scope
 US-listed equities Lynch's method can analyze. Pre-revenue/binary-outcome bets (e.g., early biotech) are legitimately **out of scope** — say so rather than fabricate a story ("know what you own"). **Derivatives — options, futures, shorting — are also out of scope** (ch. 19, gate 10): decline the derivative and redirect to researching the underlying business.

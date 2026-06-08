@@ -323,7 +323,8 @@ def stage_a_survivor_ciks(ua, years, end_year):
         try:
             frame = fe.cached_json(FRAMES_URL.format(concept="EarningsPerShareDiluted", year=yr),
                                    ua, f"frames_eps_{yr}.json")
-        except Exception:
+        except Exception as e:             # broad on purpose (don't crash the sweep)
+            print(f"# frames {yr} unavailable: {e}", file=sys.stderr)   # but never silent
             continue                       # a missing year just narrows the window
         for row in frame.get("data", []):
             by_cik.setdefault(row["cik"], {})[str(yr)] = row["val"]
@@ -352,8 +353,11 @@ def attach_prices(records, sleep):
                     rec["price"] = px
                     rec["price_as_of"] = str(hist.index[-1].date())
                     rec["price_source"] = "yfinance (screening-only)"
-        except Exception:
-            rec["price"] = rec.get("price")     # leave None on failure
+        except Exception as e:                  # broad on purpose (one bad ticker
+            # must not abort the whole sweep) - but log it, never swallow silently,
+            # so a systematically-failing price source is visible, not invisible.
+            print(f"# price skip {rec.get('ticker', '?')}: {e}", file=sys.stderr)
+            rec["price"] = rec.get("price")     # leave None on failure (-> dropped, counted)
         if sleep:
             time.sleep(sleep)
     return records, None

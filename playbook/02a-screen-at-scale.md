@@ -33,6 +33,9 @@ Each stage is ~10–100× cheaper than the next, so the expensive homework is on
 ✅ The script emits: numbers (P/E on TTM EPS, PEG, dividend-adjusted PEG, net cash), a category **guess**, and which bucket a name fell into and **why** (reasoned drop tallies — no silent exclusion).
 ❌ The script never emits: a Buy/Watch/Pass, a "top pick", or any judgment that rests on the story, the excitement, or the price action. Those live in the markdown skills, justified by fundamentals only.
 
+> [!note] Output files (fixed names, never crossed)
+> A full sweep writes **`scan-results.md`**. A `--fixtures` verification run writes **`scan-results.fixtures.md`** and is offline by contract — it must **never** clobber the real sweep's `scan-results.md` (regression-pinned by `tests/test_universe_screen.py` → `TestFixturesResultsPathIsolation`). `scan-results.sample.md` is reserved for a future small live sample. The whole verification layer runs in one command: `scripts/verify`.
+
 ## This is a live screen, not a backtester
 
 The universe is only **currently-listed** filers (survivorship bias) using **latest/restated** figures (look-ahead bias). That is fine for *"what should I look at today?"* — you can only buy listed names and you want the freshest fundamentals — but it is **fatal for any performance claim**. Every `scan-results.md` carries this disclaimer, and the tool asserts no track record.

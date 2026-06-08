@@ -92,6 +92,16 @@ class TestFunnelDiscipline(unittest.TestCase):
         # cheaper-for-growth first: GRND (0.85) before STAL (3.07)
         self.assertEqual(self.ranked_tickers, ["GRND", "STAL"])
 
+    def test_screen_metrics_are_compute_output(self):
+        # The seam that must never drift: a ranked name's metrics ARE
+        # compute_valuation.compute()'s output verbatim, so /scan and /research
+        # can never disagree on a number (the STAL P/E 0.0 / PEG 0.0 regression).
+        rec = next(r for r in self.records if r["ticker"] == "GRND")
+        expected = u.compute(u._to_facts(rec), "Fast grower")
+        got = self.idx["GRND"]["metrics"]
+        for key in ("pe", "peg", "dividend_adjusted_peg", "net_cash_per_share"):
+            self.assertEqual(got[key], expected[key], f"diverged on {key}")
+
     # --- the traps: must NOT be ranked --------------------------------------
     def test_down_year_is_possible_cyclical_manual(self):
         r = self.idx["CYC"]
@@ -187,6 +197,31 @@ class TestPriceGuards(unittest.TestCase):
         self.assertIsNone(recs[0].get("price"))     # 0.0 quote rejected -> None
 
 
+class TestExceptionLogging(unittest.TestCase):
+    """A failing price source must be VISIBLE, not silently swallowed - the
+    broad catch is kept for graceful degradation, but it now logs to stderr."""
+
+    def test_attach_prices_logs_on_failure(self):
+        import contextlib
+        import io
+
+        class _Raises:
+            def Ticker(self, ticker):                   # noqa: N802 - mimic yfinance
+                raise RuntimeError("boom")
+
+        recs = [{"ticker": "ZZZ"}]
+        saved, buf = u.yf, io.StringIO()
+        u.yf = _Raises()
+        try:
+            with contextlib.redirect_stderr(buf):
+                u.attach_prices(recs, sleep=0)
+        finally:
+            u.yf = saved
+        self.assertIsNone(recs[0].get("price"))         # behavior unchanged: still None
+        self.assertIn("ZZZ", buf.getvalue())            # but no longer silent
+        self.assertIn("boom", buf.getvalue())
+
+
 class TestCommonTickerPreference(unittest.TestCase):
     """_ticker_rank keeps the common-stock line when a CIK lists several tickers
     (the preferred/note-collision that produced the artifact 'bargains')."""
@@ -226,7 +261,8 @@ class TestFixturesStayOffline(unittest.TestCase):
         try:
             with contextlib.redirect_stdout(io.StringIO()):   # main() prints the table
                 u.main()
-            md = open(tmp.name).read()
+            with open(tmp.name) as fh:
+                md = fh.read()
         finally:
             u.yf, sys.argv = saved_yf, saved_argv
             os.unlink(tmp.name)
