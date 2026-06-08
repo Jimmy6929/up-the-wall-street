@@ -1,66 +1,71 @@
 {
   "ticker": "CSV",
-  "company": "Carriage Services, Inc.",
+  "company": "CARRIAGE SERVICES INC",
   "cik": 1016281,
-  "category": "Stalwart",
-  "source": "SEC EDGAR companyfacts CIK0001016281 (fundamentals); web sources noted per field",
-  "as_of": "2026-06-07",
-  "_note": "Stalwart (steady, recession-resistant death-care roll-up; NOT cyclical). eps_ttm is a TRUE trailing-4-quarter diluted EPS through 2026-03-31, not the FY2025 figure the fetch_edgar scaffold defaulted to. total_debt corrected from the scaffold: the script summed LongTermDebtNoncurrent+LongTermDebtCurrent ($6.2M, a minor finance-lease sub-component) instead of the comprehensive LongTermDebt tag ($522.3M = $397.5M 4.25% Senior Notes due 2029 + $119.3M Credit Facility). See data-quality notes.",
+  "category": "Slow grower",
+  "source": "SEC EDGAR companyfacts CIK0001016281; supplemented by web sources (see field-level provenance)",
+  "as_of": "2026-06-08",
+  "_note": "Deathcare (funeral homes & cemeteries). total_debt CORRECTED from fetch_edgar.py: the script summed only LongTermDebtNoncurrent ($5.581M) + LongTermDebtCurrent ($0.607M) = acquisition debt only, missing Senior Notes and the credit facility. Correct total debt uses the us-gaap:LongTermDebt aggregate ($528.335M = $397.319M Senior Notes 4.25% due 2029 + $125.435M term loan/credit facility + $5.581M acquisition debt) plus current maturities $0.607M = $528.942M, all as-of 2025-12-31 (FY2025 10-K). Cash and shares set to the 12/31/2025 10-K to keep the balance sheet internally consistent (one date).",
   "inputs": {
     "price": {
-      "value": 37.53,
-      "source": "stockanalysis.com / Investing.com NYSE:CSV quote (corroborated)",
-      "as_of": "2026-06-05"
+      "value": 45.46,
+      "source": "Investing.com / Yahoo Finance / CNBC intraday quote (NYSE:CSV)",
+      "as_of": "2026-06-08"
     },
     "eps_ttm": {
-      "value": 2.77,
-      "source": "SEC EDGAR companyfacts CIK0001016281 (EarningsPerShareDiluted): trailing 4 quarters = 2025Q2 0.74 + 2025Q3 0.41 + 2025Q4 0.78 (derived FY2025 3.25 minus 9mo-2025 2.47) + 2026Q1 0.84. Independently corroborated by stockanalysis.com TTM EPS ~$2.76.",
-      "as_of": "2026-03-31"
+      "value": 3.25,
+      "source": "SEC EDGAR companyfacts CIK0001016281 (EarningsPerShareDiluted, FY2025)",
+      "as_of": "2025-12-31"
     },
     "eps_history": {
       "value": {
         "2021": 1.81,
         "2022": 2.63,
         "2023": 2.14,
-        "2024": 2.10,
+        "2024": 2.1,
         "2025": 3.25
       },
-      "source": "SEC EDGAR companyfacts CIK0001016281 (EarningsPerShareDiluted, annual 10-K)",
-      "as_of": "FY series 2021-2025"
+      "source": "SEC EDGAR companyfacts CIK0001016281 (EarningsPerShareDiluted, annual diluted)",
+      "as_of": "2025-12-31"
     },
     "dividend_per_share": {
       "value": 0.45,
-      "source": "SEC EDGAR companyfacts CIK0001016281 (CommonStockDividendsPerShareDeclared); corroborated stockanalysis.com $0.45 annual ($0.1125/qtr)",
-      "as_of": "latest FY / ex-div 2026-05-04"
+      "source": "SEC EDGAR companyfacts CIK0001016281 (CommonStockDividendsPerShareDeclared, FY2025: 4 x $0.1125 quarterly)",
+      "as_of": "2025-12-31"
     },
     "shares_outstanding": {
-      "value": 15872328,
-      "source": "SEC EDGAR companyfacts CIK0001016281 (CommonStockSharesOutstanding); dei cover 15,872,328 as of 2026-04-28",
-      "as_of": "2026-03-31"
+      "value": 15751228,
+      "source": "SEC EDGAR FY2025 10-K cover (dei:EntityCommonStockSharesOutstanding)",
+      "as_of": "2026-02-19"
     },
     "total_debt": {
-      "value": 522281000,
-      "source": "SEC EDGAR companyfacts CIK0001016281 (LongTermDebt, comprehensive tag); company Q1-2026 release: $397.5M 4.25% Senior Notes due 2029 + $119.3M Credit Facility",
-      "as_of": "2026-03-31"
+      "value": 528942000,
+      "source": "SEC EDGAR companyfacts CIK0001016281 FY2025 10-K: LongTermDebt aggregate $528,335,000 (Senior Notes 4.25% due 2029 $397,319,000 + credit facility/term loan $125,435,000 + acquisition debt $5,581,000) + LongTermDebtCurrent $607,000",
+      "as_of": "2025-12-31"
     },
     "cash": {
-      "value": 2908000,
-      "source": "SEC EDGAR companyfacts CIK0001016281 (CashAndCashEquivalentsAtCarryingValue)",
-      "as_of": "2026-03-31"
+      "value": 1688000,
+      "source": "SEC EDGAR companyfacts CIK0001016281 (CashAndCashEquivalentsAtCarryingValue, FY2025 10-K)",
+      "as_of": "2025-12-31"
     },
     "long_term_growth_estimate_pct": {
-      "value": 7.4,
-      "source": "Analyst consensus near-term EPS growth ~7.4% (year-ahead FY EPS ~$3.20-$3.45). LABEL: ESTIMATE. Range across sources 4.8% (Simply Wall St per-annum EPS) to 7.9% (earnings).",
-      "as_of": "2026-06-05"
+      "value": 5.0,
+      "source": "Estimate: company FY2026 adjusted-EPS guidance midpoint $3.45 vs FY2025 $3.25 ~6.2%; Simply Wall St analyst long-term EPS forecast ~4.8%/yr; consensus NTM ~7.4%. Conservative ~5% chosen, favoring proven growth.",
+      "as_of": "2026-06-08"
     },
     "institutional_ownership_pct": {
-      "value": 66.46,
-      "source": "stockanalysis.com / MarketBeat 13F aggregates (66.46%); a second source cited 76.37% - used the lower, better-corroborated figure",
-      "as_of": "2026-06-05"
+      "value": 73.0,
+      "source": "MarketBeat / Nasdaq institutional-ownership writeup (FMR 15%, BlackRock 6.5%, Vanguard 6.5%); other sources cite up to 83% - range noted.",
+      "as_of": "2026-06-08"
     },
     "insider_activity": {
-      "value": "Routine equity-comp grants and tax-withholding dispositions only (e.g., CFO/CIO RSU & PSU grants Feb 2026; director stock grants Mar 2026; VP 164 shares withheld for taxes on vesting). No open-market insider buys or open-market sales.",
-      "source": "SEC Form 4 filings (StockTitan summaries), Feb-Mar 2026",
+      "value": "Net buying over the past year (insiders up ~80% on a ~$580k open-market purchase; insiders own ~10%; CEO Carlos Quezada holds ~0.6%). Only 'sales' were tax-withholding share surrenders, not discretionary selling.",
+      "source": "Simply Wall St ownership page / SECForm4 (CIK 1016281) / Nasdaq insider article",
+      "as_of": "2026-06-08"
+    },
+    "buybacks": {
+      "value": "Authorization ~$48.9M remaining; essentially dormant - no open-market repurchases in FY2025 or Q1 2026 (only 31,566 shares surrendered for employee tax withholding in Q1 2026). Company also filed a $100M ATM equity program (potential dilution, opposite of buyback).",
+      "source": "SEC 10-Q FY2025 Q1 / FY2026 Q1 (csv-20260331); 424B5 ATM prospectus",
       "as_of": "2026-03-31"
     }
   }
