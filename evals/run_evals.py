@@ -44,6 +44,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CASES_DIR = os.path.join(ROOT, "evals", "cases")
@@ -249,11 +250,13 @@ def code_grade(case, outdir, response_text):
     note_path = find_note(outdir, ticker)
 
     if not require_note:
-        # Conversational cases (e.g. a derivatives decline): nothing to code-grade;
-        # if a note WAS written anyway it gets graded below like a full note.
-        if note_path is None:
-            return [{"check": "no-note-required", "pass": True, "detail": "conversational case"}]
-    elif note_path is None:
+        # Conversational/recheck cases: the output isn't a template research note
+        # (it may be a reply, or a free-form update with e.g. a then-vs-now
+        # comparison table), so the structural code graders don't apply — the
+        # frozen expected_behavior items, judged in Layer B, carry these cases.
+        return [{"check": "no-template-note-required", "pass": True,
+                 "detail": "judge-graded case (require_full_note: false)"}]
+    if note_path is None:
         return [{"check": "note-written", "pass": False,
                  "detail": f"no note found in {outdir}"}]
     note = open(note_path).read()
@@ -261,10 +264,12 @@ def code_grade(case, outdir, response_text):
 
     truth = case.get("category_truth", "")
     if truth and not truth.startswith("n/a"):
-        # truth may carry a parenthetical ("Avoid (whisper stock)"); compare the head
+        # BOTH sides may carry a parenthetical qualifier ("Avoid (whisper stock)" /
+        # "Avoid (hype over fundamentals)"); the category judgment is the head token.
         truth_main = truth.split("(")[0].strip()
         got = fm.get("category", "")
-        checks.append({"check": "category", "pass": got.lower() == truth_main.lower(),
+        got_main = got.split("(")[0].strip()
+        checks.append({"check": "category", "pass": got_main.lower() == truth_main.lower(),
                        "detail": f"note={got!r} truth={truth!r}"})
 
     allowed = grade.get("verdict_allowed")
@@ -325,11 +330,19 @@ def extract_json(text):
     return json.loads(text[start:])
 
 
-def judge_grade(case, note_text, response_text, model):
+def judge_grade(case, note_text, response_text, model, outdir):
+    # The judge prompt is fully self-contained, so run it from a temp cwd OUTSIDE
+    # the repo: inside it, the project's Stop hook can hijack the session into a
+    # /review-local flow and the judge's "result" becomes a review report instead
+    # of the JSON verdict (observed: 21 turns, $2, no JSON). --max-turns stays
+    # tight for the same reason - grading is single-shot.
     cmd = [os.environ.get("EVAL_CLAUDE_BIN", "claude"), "-p", "--output-format", "json",
-           "--model", model]
+           "--model", model, "--max-turns", "4"]
     proc = subprocess.run(cmd, input=judge_prompt(case, note_text, response_text),
-                          cwd=ROOT, capture_output=True, text=True, timeout=600)
+                          cwd=tempfile.gettempdir(), capture_output=True, text=True,
+                          timeout=600)
+    with open(os.path.join(outdir, "judge-raw.json"), "w") as fh:   # transcript review
+        fh.write(proc.stdout or "")
     raw = json.loads(proc.stdout).get("result", "")
     verdicts = extract_json(raw).get("items", [])
     out = []
@@ -349,7 +362,7 @@ def grade_trial(case, outdir, response_text, judge_model, no_judge):
     note_text = open(note_path).read() if note_path else ""
     if not no_judge:
         try:
-            checks += judge_grade(case, note_text, response_text, judge_model)
+            checks += judge_grade(case, note_text, response_text, judge_model, outdir)
         except Exception as e:   # a judge failure must FAIL the trial, never pass it
             checks.append({"check": "judge:error", "pass": False, "detail": str(e)[:300]})
     with open(os.path.join(outdir, "grade.json"), "w") as fh:

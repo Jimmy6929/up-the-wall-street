@@ -1,0 +1,4 @@
+date	mode	k	cases	passed	score	per_case	run_dir	note
+2026-06-10	smoke	1	5	3	3/5	03-cyclical-peak-trap:1/1,04-hot-stock-avoid:0/1,05-whisper-stock-avoid:1/1,06-derivatives-out-of-scope:1/1,10-recheck-broken-story-sell:0/1	evals/runs/2026-06-10T14-38-50	first scored smoke run (trap cases, k=1)
+2026-06-10	smoke	1	5	4	4/5	03-cyclical-peak-trap:0/1,04-hot-stock-avoid:1/1,05-whisper-stock-avoid:1/1,06-derivatives-out-of-scope:1/1,10-recheck-broken-story-sell:1/1	evals/runs/2026-06-10T14-38-50	re-grade after grader fixes: category head-token both sides; require_full_note=false cases judge-only
+2026-06-10	smoke	1	5	5	5/5	03-cyclical-peak-trap:1/1,04-hot-stock-avoid:1/1,05-whisper-stock-avoid:1/1,06-derivatives-out-of-scope:1/1,10-recheck-broken-story-sell:1/1	evals/runs/2026-06-10T14-38-50	re-grade 2: judge isolated from project Stop hook (temp cwd, max-turns 4)

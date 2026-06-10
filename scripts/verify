@@ -22,7 +22,8 @@ echo "== schema/provenance gate: research/*.data.json =="
 python3 "$SCRIPTS/validate_data.py" research/*.data.json
 
 echo "== markdown source/as-of coverage (advisory) =="
-python3 "$SCRIPTS/check_research_markdown.py" --warn-only research/*.md
+# lessons.md is an append-only ledger, not a research note - exclude it
+python3 "$SCRIPTS/check_research_markdown.py" --warn-only $(ls research/*.md | grep -v '^research/lessons\.md$')
 
 echo "== note staleness (advisory; Lynch rechecks the story every few months) =="
 python3 - <<'PY'
@@ -30,6 +31,8 @@ import datetime, glob, re
 STALE_DAYS = 100
 today = datetime.date.today()
 for path in sorted(glob.glob("research/*.md")):
+    if path.endswith("lessons.md"):          # the lessons ledger is not a note
+        continue
     m = re.search(r"^reviewed:\s*(\d{4}-\d{2}-\d{2})", open(path).read(), re.MULTILINE)
     if not m:
         print(f"  WARN {path}: no 'reviewed:' date in frontmatter")

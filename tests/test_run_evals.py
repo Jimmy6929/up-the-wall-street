@@ -146,6 +146,21 @@ class TestCodeGrade(unittest.TestCase):
         self.assertTrue(checks["metric:pe"])     # 6.0 appears in the note
         self.assertTrue(checks["bear-case"])
 
+    def test_category_parenthetical_qualifiers_match_on_head(self):
+        # "Avoid (hype over fundamentals)" vs truth "Avoid (hottest stock...)" is the
+        # same category judgment — the grader must not fail on qualifier wording
+        # (the over-rigid-grader trap from the first smoke run)
+        with open(os.path.join(rv.CASES_DIR, "04-hot-stock-avoid.json")) as fh:
+            case = json.load(fh)
+        case["_file"] = "04-hot-stock-avoid.json"
+        note = NOTE.replace("category: Cyclical", "category: Avoid (hype over fundamentals)") \
+                   .replace("ticker: STAK", "ticker: NOVA")
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, "NOVA.md"), "w") as fh:
+                fh.write(note)
+            checks = {c["check"]: c["pass"] for c in rv.code_grade(case, d, "")}
+        self.assertTrue(checks["category"])
+
     def test_fails_wrong_category_and_buy_verdict(self):
         case = self._case()
         bad = NOTE.replace("category: Cyclical", "category: Stalwart") \

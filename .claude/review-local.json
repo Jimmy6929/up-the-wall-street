@@ -3,6 +3,6 @@
   "identity": "see CLAUDE.md",
   "codePaths": ["**/*.py", "*.py"],
   "hardSignals": { "autodetect": true },
-  "judgeModel": "opus",
+  "judgeModel": "inherit",
   "maxAttempts": 2
 }

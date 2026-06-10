@@ -34,7 +34,34 @@ In Claude Code, **launched from this repo**, run a slash command — or just ask
 | `/recheck <TICKER>` | Re-test a holding's story, refresh the numbers, run the 3 monitoring questions → Hold / Add / Sell. Updates `watchlist.md` / `portfolio.md`. |
 | `/portfolio-review` | Whole-portfolio check: category balance, followability, watering-the-weeds, concentration, stale stories. |
 
-These are **separate** tools. `/research` runs one ticker end-to-end (it *includes* a screening step), but it does **not** run `/screen`, `/recheck`, or `/portfolio-review` — those are standalone. Typical cadence: `/scan` the market (or jot ideas in `leads.md`) → `/screen` to triage → `/research` the survivors → `/recheck` holdings (quarterly) → `/portfolio-review` for balance. `/scan` emits **leads, not verdicts** — it's a live discovery screen (survivorship/look-ahead biased by construction), never a backtester or a buy signal.
+These are **separate** tools. `/research` runs one ticker end-to-end (it *includes* a screening step), but it does **not** run `/screen`, `/recheck`, or `/portfolio-review` — those are standalone. `/scan` emits **leads, not verdicts** — it's a live discovery screen (survivorship/look-ahead biased by construction), never a backtester or a buy signal.
+
+## The recommended way to use it
+
+The agent is built around Lynch's actual rhythm: **find → investigate → decide → hold and re-check**. The human supplies the leads and the decisions; the agent supplies the discipline in between.
+
+**1. Feed it leads — yours first.** Your real edge (ch. 06/12) is what you notice before Wall Street does: the product everyone at work uses, the packed store, the dull niche supplier. Jot those into `leads.md` in one line; no ceremony. When you have no leads, run `/scan` to sweep the market — but treat its ranked table as a *reading list*, not a buy list (the genuinely boring Lynch names often sit mid-table, and the manual-review bucket is worth mining).
+
+**2. Triage cheaply before researching deeply.** Run `/screen` over `leads.md` (or a few tickers) to kill the obvious passes — hottest-in-hottest, "the next X", whisper stories — before spending a full research run. Expect most leads to die here. That's the system working.
+
+**3. `/research` the survivors, then read two sections before anything else:** the **bear case** and the **category**. The category sets what you're allowed to expect (a stalwart is not a tenbagger; a cyclical's low P/E is a danger sign), and the bear case is the part you're most tempted to skip. Every number in the note carries a source and as-of date — if one doesn't, the run is broken; don't act on it.
+
+**4. The verdict is the start of *your* work, not the end.** On a **Buy candidate**, the agent surfaces the mirror test (ch. 04) — can you hold through a 30–50% drawdown, is this money you won't need, can you ignore the price for years? It will never answer those for you, and it will never size a position. If you act, record it in `portfolio.md` so the monitoring tools can see it.
+
+**5. Re-check the story, not the price.** Quarterly (or when earnings land), run `/recheck <TICKER>` — it re-runs the numbers and the three monitoring questions and decides Hold / Add / Sell *by category rules*. `scripts/verify` nags when a note hasn't been rechecked in ~100 days. Run `/portfolio-review` a couple of times a year for category balance, followability, and watering-the-weeds. The only valid reason to sell is a **broken story** — never "it's down", never "it's up", and a stock that's down 35% is not automatically a bargain.
+
+**6. Don't ask it the questions it's designed to refuse.** "Where's the market headed", "is now a good time", options/shorting — it will decline and redirect to a researchable company (that's ch. 05 and ch. 19, not stubbornness). Pre-revenue lottery tickets get an honest "outside what the method can analyze."
+
+### Keeping the agent trustworthy (maintenance)
+
+| When | Run | Why |
+|---|---|---|
+| Before trusting the repo, or after touching scripts/data/notes | `scripts/verify` | Unit tests + the fail-closed schema/provenance gate + advisory note checks. Fast, free, offline. |
+| After editing `playbook/`, skills, or scripts | `scripts/evals --smoke` | The method's regression test: re-runs the adversarial trap cases (cyclical peak, hot stock, whisper stock, derivatives, broken-story sell) headlessly and grades them. Costs real tokens. |
+| Before trusting a big method change | `scripts/evals` | All cases at pass^3 — consistency, not best-of. |
+| After any escalation or rubric edit (and ~monthly) | `/review-fixtures`, `/review-retro` | Recalibrates the self-review judges against the frozen fixtures; keep-or-revert. |
+
+One habit ties it together: when a run surprises you (a data quirk, a near-miss, a source that disagreed), it appends one line to `research/lessons.md` — skim it occasionally; it's the agent's memory of where it almost went wrong.
 
 ## Layout
 
