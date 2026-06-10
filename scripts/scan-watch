@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""scan-watch - live progress bar for a running /scan sweep. Display only.
+
+The scan engine (universe_screen.py) prints machine-readable progress to
+stderr ('# Stage A: N survivors', '# fundamentals: i/n', '# prices: i/n').
+Point the sweep's combined output at a log file and aim this script at it:
+
+    python3 .claude/skills/research/scripts/universe_screen.py --write-leads \
+        > /tmp/scan-run.log 2>&1 &
+    scripts/scan-watch              # animated bar - run this in your own terminal
+    scripts/scan-watch --once       # one status line, no animation (safe anywhere)
+    scripts/scan-watch /path/to.log # non-default log path
+
+It never touches the scan or its outputs - it only reads the log. The sweep is
+done when the engine's final markdown ('# Scan results -') lands in the log.
+Stdlib only.
+"""
+import re
+import sys
+import time
+
+DEFAULT_LOG = "/tmp/scan-run.log"
+SPINNER = "|/-\\"
+BAR_WIDTH = 28
+
+
+def status(text):
+    """(phase, i, n) from the latest progress markers in the log text."""
+    prices = re.findall(r"# prices: (\d+)/(\d+)", text)
+    if prices:
+        i, n = map(int, prices[-1])
+        return "pricing", i, n
+    funds = re.findall(r"# fundamentals: (\d+)/(\d+)", text)
+    if funds:
+        i, n = map(int, funds[-1])
+        return "fundamentals", i, n
+    stage_a = re.search(r"# Stage A: (\d+) survivors", text)
+    if stage_a:
+        return "stage A done", 0, int(stage_a.group(1))
+    return "starting", 0, 0
+
+
+def is_done(text):
+    return bool(re.search(r"^# Scan results -", text, re.MULTILINE))
+
+
+def bar(i, n, width=BAR_WIDTH):
+    if not n:
+        return "." * width
+    fill = int(width * min(i, n) / n)
+    return "#" * fill + "." * (width - fill)
+
+
+def line(text, elapsed_s, tick, eta_s=None):
+    phase, i, n = status(text)
+    done = is_done(text)
+    spin = "✓" if done else SPINNER[tick % len(SPINNER)]
+    pct = f"{100 * i // n:3d}%" if n else "  -%"
+    eta = ""
+    if eta_s and not done:
+        eta = f" · ~{max(1, int(eta_s) // 60)}m left"
+    if done:
+        phase, pct = "complete", "100%"
+    return (f"{spin} scan {phase:<13} [{bar(n if done else i, n)}] {pct} "
+            f"({i}/{n or '?'}) · {elapsed_s // 60}m{elapsed_s % 60:02d}s{eta}")
+
+
+def main():
+    args = [a for a in sys.argv[1:]]
+    once = "--once" in args
+    paths = [a for a in args if not a.startswith("--")]
+    log = paths[0] if paths else DEFAULT_LOG
+
+    def read():
+        try:
+            with open(log) as fh:
+                return fh.read()
+        except OSError:
+            return ""
+
+    started = time.time()
+    first = None                       # (phase, i, t) - per-phase rate anchor for ETA
+    tick = 0
+    while True:
+        text = read()
+        phase, i, n = status(text)
+        if first is None or first[0] != phase:
+            first = (phase, i, time.time())
+        eta = None
+        di, dt = i - first[1], time.time() - first[2]
+        if di > 0 and dt > 1 and n:
+            eta = (n - i) / (di / dt)
+        out = line(text, int(time.time() - started), tick, eta)
+        if once:
+            print(out)
+            return 0
+        print("\r" + out + "  ", end="", flush=True)
+        if is_done(text):
+            print()
+            return 0
+        tick += 1
+        time.sleep(0.25)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

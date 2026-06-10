@@ -428,12 +428,15 @@ def stage_a_survivor_ciks(ua, years, end_year):
 
 def attach_prices(records, sleep):
     """Attach a yfinance price + REAL quote date to each record (screening-only).
-    Missing/failed prices stay None -> screen_one drops them, counted."""
+    Missing/failed prices stay None -> screen_one drops them, counted.
+    Emits '# prices: i/n' to stderr every 25 names so a long sweep is watchable
+    (scripts/scan-watch renders these lines as a live progress bar)."""
     if yf is None:
         for r in records:
             r.setdefault("price", None)
         return records, "yfinance not installed"
-    for rec in records:
+    n = len(records)
+    for i, rec in enumerate(records, 1):
         try:
             t = yf.Ticker(rec["ticker"])
             hist = t.history(period="5d")
@@ -448,6 +451,8 @@ def attach_prices(records, sleep):
             # so a systematically-failing price source is visible, not invisible.
             print(f"# price skip {rec.get('ticker', '?')}: {e}", file=sys.stderr)
             rec["price"] = rec.get("price")     # leave None on failure (-> dropped, counted)
+        if i % 25 == 0 or i == n:
+            print(f"# prices: {i}/{n}", file=sys.stderr, flush=True)
         if sleep:
             time.sleep(sleep)
     return records, None
@@ -507,7 +512,7 @@ def main():
                 cik_to_tt[cik] = (tk, title)
         classes = share_classes_by_cik(tmap)
         records = []
-        for cik in survivors:
+        for i, cik in enumerate(survivors, 1):
             tk, title = cik_to_tt.get(cik, ("", ""))
             if not tk:
                 continue
@@ -517,6 +522,8 @@ def main():
                 time.sleep(args.sleep)
             except Exception as e:
                 print(f"# skip CIK{cik}: {e}", file=sys.stderr)
+            if i % 100 == 0 or i == len(survivors):
+                print(f"# fundamentals: {i}/{len(survivors)}", file=sys.stderr, flush=True)
 
     # 2) prices (screening-only) unless --no-price. --fixtures is OFFLINE by
     #    contract (docstring): fixtures carry their own price, so never hit the
