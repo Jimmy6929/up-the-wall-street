@@ -25,6 +25,7 @@ Lynch research: $1
 - [ ] 6. Bear case — delegate to skeptic
 - [ ] 7. Verdict — playbook/05 → Buy candidate / Watchlist / Pass, fundamentals-justified
 - [ ] 8. Write research/<TICKER>.md + save <TICKER>.data.json + update watchlist.md; if Buy, surface the mirror test (g9)
+- [ ] 9. Lesson — if anything in this run surprised you (a data quirk, a near-miss, a gate that almost slipped), append ONE line to research/lessons.md; skip silently if nothing did
 ```
 
 ## The steps
@@ -39,6 +40,8 @@ Lynch research: $1
 
 **4. Numbers — delegate.** Use the **`numbers-analyst`** subagent. Give it the ticker `$1` and the category. It will fetch data (SEC EDGAR → web → ask you), validate provenance, run `compute_valuation.py`, and return the metrics JSON (P/E, historical + forward growth, PEG, dividend-adjusted PEG, net cash, flags). Save its data as `research/<TICKER>.data.json`. If it reports the data can't be validated (e.g., no price), surface that and get the missing figure before continuing — do not fabricate it. Honor its `flags` (especially `cyclical_caveat`).
 
+*Insider activity (ch. 08 green flag):* if the `sec-edgar` MCP server is connected, fill `insider_activity` from its Form 4 tools (`get_insider_summary` / `analyze_form4_transactions`) and record it in the data.json **with the same per-field `{source, as_of}` provenance as every other figure** (e.g., source: "SEC EDGAR Form 4 via MCP"); otherwise source it by hand or leave the documented gap. It is a screen/story input — never a verdict justification by itself.
+
 **5. Story.** Follow [playbook/04-story.md](../../../playbook/04-story.md). Write the category-specific two-minute drill: what it is, why it grows, what would break it. If you can't tell it plainly, the research is incomplete.
 
 **6. Bear case — delegate.** Use the **`skeptic`** subagent. Give it the draft thesis, the category, and the numbers. It returns the strongest refutation and the red flags it found. Include this verbatim-in-spirit as the note's bear case.
@@ -48,6 +51,8 @@ Lynch research: $1
 **8. Write the note.** Create `research/<TICKER>.md` from [templates/research-note.md](../../../templates/research-note.md), filling every section and citing a source + as-of date for each figure. Keep the `research/<TICKER>.data.json` beside it. Update `watchlist.md` (and `portfolio.md` only if the user is actually adding a position). Then give the user a short summary: category, verdict, the one-line story, the key number (PEG or the cyclical caveat), and the main bear-case point.
 
 If the verdict is **Buy candidate**, also surface the **mirror test** (g9, ch. 04) as the human's own call — *can you hold through a 30–50% drawdown without panic-selling; is this money you won't need soon; can you ignore the price for years?* Present it as their pre-condition to act on, **not** as something you score, and note plainly that it does not change the fundamentals verdict above.
+
+**9. Lesson (optional, one line).** If anything in this run surprised you — a data quirk (seasonal TTM, odd XBRL tags), a near-miss on a gate, a source that disagreed with EDGAR — append one dated line to `research/lessons.md` so the next run starts smarter. If nothing surprised you, skip silently; the file is for signal, not ceremony.
 
 ## Done means
 Correct category · script-computed sourced numbers · a plain-language story · an independent bear case · the category-specific checklist · a fundamentals-justified verdict. (These are what `evals/` checks — if unsure, run a relevant case.)

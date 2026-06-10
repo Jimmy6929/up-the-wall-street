@@ -302,5 +302,106 @@ class TestFixturesResultsPathIsolation(unittest.TestCase):
             os.rmdir(d)
 
 
+def _q(start, end, val):
+    return {"start": start, "end": end, "val": val, "form": "10-Q"}
+
+
+def _eps_facts(items):
+    return {"facts": {"us-gaap": {"EarningsPerShareDiluted": {
+        "units": {"USD/shares": items}}}}}
+
+
+class TestSeasonalTTM(unittest.TestCase):
+    """TTM must be 4 CONSECUTIVE quarters - the HRB regression, where the only
+    standalone quarterly facts were the SAME tax-season quarter from four
+    different years and their sum (20.89) produced a fantasy P/E of 1.82."""
+
+    def test_same_quarter_four_years_is_not_a_ttm(self):
+        facts = _eps_facts([
+            _q("2023-01-01", "2023-03-31", 4.12), _q("2024-01-01", "2024-03-31", 4.86),
+            _q("2025-01-01", "2025-03-31", 5.31), _q("2026-01-01", "2026-03-31", 6.60),
+        ])
+        self.assertEqual(u.ttm_eps_from_facts(facts), (None, None, None))
+
+    def test_four_consecutive_quarters_sum(self):
+        facts = _eps_facts([
+            _q("2025-04-01", "2025-06-30", 1.0), _q("2025-07-01", "2025-09-30", 1.1),
+            _q("2025-10-01", "2025-12-31", 1.2), _q("2026-01-01", "2026-03-31", 1.3),
+        ])
+        eps, src, asof = u.ttm_eps_from_facts(facts)
+        self.assertEqual(eps, 4.6)
+        self.assertIn("TTM=4q", src)
+        self.assertEqual(asof, "2026-03-31")
+
+    def test_gap_in_chain_falls_back(self):
+        # Q4 standalone never filed: chain breaks after 3 -> FY fallback (None here)
+        facts = _eps_facts([
+            _q("2025-07-01", "2025-09-30", 1.1),                     # gap before this
+            _q("2025-10-01", "2025-12-31", 1.2), _q("2026-01-01", "2026-03-31", 1.3),
+        ])
+        self.assertEqual(u.ttm_eps_from_facts(facts), (None, None, None))
+
+    def test_chain_tolerates_calendar_slack(self):
+        # 4-4-5 style quarter boundaries a few days apart must still chain
+        facts = _eps_facts([
+            _q("2025-04-02", "2025-06-28", 1.0), _q("2025-07-01", "2025-09-27", 1.0),
+            _q("2025-09-30", "2025-12-27", 1.0), _q("2026-01-01", "2026-03-28", 1.0),
+        ])
+        eps, _, _ = u.ttm_eps_from_facts(facts)
+        self.assertEqual(eps, 4.0)
+
+
+class TestShareClassDetection(unittest.TestCase):
+    """The gate's multi-class rule only works if records actually carry
+    n_share_classes - the inert-detection regression (CHTR-style flow-through)."""
+
+    def test_punctuated_class_pairs_counted(self):
+        self.assertEqual(u.n_share_classes_from_tickers(["BRK-A", "BRK-B"]), 2)
+        self.assertEqual(u.n_share_classes_from_tickers(["HEI", "HEI-A"]), 2)
+        self.assertEqual(u.n_share_classes_from_tickers(["LEN", "LEN.B"]), 2)
+
+    def test_preferreds_and_notes_are_not_classes(self):
+        self.assertEqual(u.n_share_classes_from_tickers(["WRB", "WRB-PH"]), 1)
+        self.assertEqual(u.n_share_classes_from_tickers(["TMUS", "TMUSL"]), 1)
+        self.assertEqual(u.n_share_classes_from_tickers(["DTE", "DTB", "DTG"]), 1)
+        self.assertEqual(u.n_share_classes_from_tickers(["AAPL"]), 1)
+
+    def test_per_share_inconsistency_goes_manual(self):
+        # NI/shares implies ~2x the reported EPS (one listed class of two, or a
+        # big NCI) -> every per-share number is suspect -> manual, never ranked.
+        rec = {"ticker": "CHT2", "price": 100.0, "eps_ttm": 5.0,
+               "eps_history": {"2021": 3.0, "2022": 3.5, "2023": 4.0,
+                               "2024": 4.5, "2025": 5.0},
+               "per_share_check": "NI/shares implies EPS ~10.00 vs reported 5.0 (FY2025)"}
+        res = u.screen_one(rec, years=5)
+        self.assertEqual(res["disposition"], "manual")
+        self.assertIn("per-share math inconsistent", res["reason"])
+
+    def test_per_share_check_helper(self):
+        eps = {2024: 4.5, 2025: 5.0}
+        self.assertIsNone(u.per_share_check(eps, {2025: 5.1e9}, 1e9))   # ~1.02x ok
+        reason = u.per_share_check(eps, {2025: 10.0e9}, 1e9)            # 2x -> flag
+        self.assertIn("implies EPS ~10.00", reason)
+        self.assertIsNone(u.per_share_check(eps, {}, 1e9))              # not computable
+        self.assertIsNone(u.per_share_check(eps, {2025: 5e9}, None))
+
+
+class TestFinancialNetCashDisplay(unittest.TestCase):
+    def test_net_cash_blanked_for_financials(self):
+        # A bank's cash - debt is not Lynch net cash (deposits are operating
+        # liabilities) - the BFC "-3510.94/sh" artifact must render as n/m.
+        rec = {"ticker": "BNKX", "company": "Example Bancorp", "price": 30.0,
+               "eps_ttm": 3.0, "is_financial": True,
+               "eps_history": {"2021": 2.0, "2022": 2.2, "2023": 2.5,
+                               "2024": 2.7, "2025": 3.0},
+               "cash": 9e9, "total_debt": 1e9, "shares_outstanding": 1e8,
+               "price_source": "test", "price_as_of": "2026-06-05",
+               "fund_source": "test", "fund_as_of": "2026-03-31"}
+        result = u.screen_records([rec], years=5)
+        md = u.render_scan_results(result, "2026-06-09")
+        row = next(ln for ln in md.splitlines() if "BNKX" in ln)
+        self.assertIn("n/m (financial)", row)
+
+
 if __name__ == "__main__":
     unittest.main()

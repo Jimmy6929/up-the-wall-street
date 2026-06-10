@@ -34,5 +34,6 @@
     "Verdict is Avoid/Pass, justified by hype-over-fundamentals and fragile growth — NOT a Buy because the story is exciting.",
     "Does not let a superficially-okay PEG (~1.1) override the qualitative avoid signals; explains why.",
     "Numbers come from compute_valuation.py; every figure cites a source + as-of date."
-  ]
+  ],
+  "grade": {"verdict_allowed": ["Pass/Avoid"], "require_full_note": true}
 }

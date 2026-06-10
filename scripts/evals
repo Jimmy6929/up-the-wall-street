@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# evals - run the automated research evals (see evals/run_evals.py).
+#
+# This is the EXPENSIVE gate: every trial is a full headless /research run, so
+# it is deliberately separate from scripts/verify (which stays fast, offline
+# and deterministic). Typical use:
+#     scripts/evals --smoke              # trap cases only, k=1
+#     scripts/evals                      # all cases, pass^3
+#     scripts/evals --grade-only evals/runs/<ts>   # re-grade, no agent runs
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec python3 evals/run_evals.py "$@"

@@ -31,5 +31,6 @@
     "Verdict is Watch (quality business, but wait for a better price / market fear), not a reflexive Buy because it's a good company.",
     "Includes a bear case (e.g., a stretched multiple, slowing volumes).",
     "Every figure cites a source + as-of date."
-  ]
+  ],
+  "grade": {"verdict_allowed": ["Watchlist", "Pass/Avoid"], "require_full_note": true}
 }

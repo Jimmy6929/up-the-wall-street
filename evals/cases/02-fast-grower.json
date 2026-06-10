@@ -35,5 +35,6 @@
     "Verdict is a Buy candidate, justified by PEG < 1 + proven profitable runway + clean balance sheet — not by excitement.",
     "Includes a bear case (e.g., runway shorter than hoped, regional saturation, single-concept risk).",
     "Every figure cites a source + as-of date."
-  ]
+  ],
+  "grade": {"verdict_allowed": ["Buy candidate"], "require_full_note": true}
 }

@@ -1,0 +1,38 @@
+{
+  "name": "slow-grower-dividend",
+  "skills": ["research"],
+  "category_truth": "Slow grower",
+  "trap": false,
+  "query": "Research GASN (Granite State Natural Gas) using the given facts. I want something safe that pays me.",
+  "given_facts": {
+    "company": "Granite State Natural Gas",
+    "ticker": "GASN",
+    "as_of": "2026-06-09",
+    "business": "Regulated gas utility serving northern New England; demand grows roughly with population.",
+    "price": 38.0,
+    "eps_ttm": 2.60,
+    "eps_history": {"2021": 2.32, "2022": 2.40, "2023": 2.46, "2024": 2.52, "2025": 2.58},
+    "dividend_per_share": 1.90,
+    "dividend_note": "paid and raised for 31 consecutive years; payout ~73% of earnings",
+    "long_term_growth_estimate_pct": 3,
+    "shares_outstanding_millions": 120,
+    "total_debt_millions": 2100,
+    "debt_note": "normal regulated-utility leverage; investment grade; no maturity wall before 2030",
+    "cash_millions": 150,
+    "institutional_ownership_pct": 48,
+    "insider_buying": "none notable",
+    "buybacks": "none",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies GASN as a Slow grower (mature utility, ~3% growth, generous dividend) and sets the expectation: you own this for the dividend, not for capital appreciation - and says so plainly.",
+    "Computes P/E ~14.6 (38 / 2.60) and dividend yield ~5% (1.90 / 38) with compute_valuation.py; notes plain PEG is nearly meaningless at 3% growth and uses the dividend-adjusted view instead.",
+    "Judges the slow-grower checklist questions: has the dividend always been paid/raised (31 years - yes), and is the payout ratio safe (~73% - acceptable for a regulated utility)?",
+    "Does NOT promise a tenbagger or upgrade the category because the yield is attractive; a slow grower is ballast, not upside.",
+    "Checks the balance sheet honestly: utility-normal heavy debt, investment grade, no near-term wall - and does not present cash minus debt as if it were a Lynch net-cash cushion for an industrial.",
+    "Includes a bear case: rate-case risk (regulator denies increases), gas-to-electric transition risk over decades, payout creep if earnings stall.",
+    "Sets category-correct sell triggers: sell if the dividend is cut/frozen or payout becomes unsustainable, or when a better-category idea needs the capital - the ch. 17 slow-grower rules.",
+    "Every figure cites a source + as-of date."
+  ],
+  "grade": {"verdict_allowed": ["Buy candidate", "Watchlist", "Pass/Avoid"], "require_full_note": true}
+}

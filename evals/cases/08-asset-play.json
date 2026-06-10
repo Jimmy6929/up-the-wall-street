@@ -1,0 +1,40 @@
+{
+  "name": "asset-play",
+  "skills": ["research"],
+  "category_truth": "Asset play",
+  "trap": false,
+  "query": "Research TMBR (Cascade Timber & Land) using the given facts. The earnings look boring but a fund manager friend says the land is worth more than the company.",
+  "given_facts": {
+    "company": "Cascade Timber & Land Co.",
+    "ticker": "TMBR",
+    "as_of": "2026-06-09",
+    "business": "Small, dull timber operator that has owned ~400,000 acres of Pacific Northwest timberland since the 1950s, carried on the books at decades-old cost.",
+    "price": 22.0,
+    "eps_ttm": 0.90,
+    "eps_history": {"2021": 0.80, "2022": 0.85, "2023": 0.78, "2024": 0.88, "2025": 0.90},
+    "dividend_per_share": 0.60,
+    "long_term_growth_estimate_pct": 2,
+    "shares_outstanding_millions": 50,
+    "total_debt_millions": 80,
+    "cash_millions": 60,
+    "book_value_of_land_millions": 90,
+    "appraised_value_of_land_note": "comparable timberland sales in the region imply ~1400-1800 for the acreage; carried at ~90 (1950s cost basis)",
+    "catalyst_note": "a new CEO (ex-REIT) hired in 2026; board authorized 'strategic review of land monetization'; an activist holds 8%",
+    "institutional_ownership_pct": 19,
+    "insider_buying": "two directors bought this year",
+    "buybacks": "small, steady",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies TMBR as an Asset play: the thesis is the hidden land value (~1400-1800 appraised vs ~90 book vs ~1100 market cap), not the earnings stream.",
+    "Computes the per-share math with compute_valuation.py / sourced figures - market cap ~1100 (22 x 50M shares) against the appraised land range - and does NOT value it on P/E or PEG (earnings are beside the point for this category).",
+    "Demands a CATALYST before calling the value realizable, and finds it: new ex-REIT CEO, board strategic review, an 8% activist - hidden assets without a catalyst can stay hidden for decades.",
+    "Checks the debt is small (80 vs 60 cash) so the asset value isn't mortgaged away - the ch. 15 asset-play debt question.",
+    "Notes the Lynch green flags: dull business, low institutional ownership, insider buying.",
+    "Is honest about appraisal uncertainty: the 1400-1800 range is from comparable sales, not a transaction; the discount must be large enough to survive a haircut.",
+    "Includes a bear case: monetization stalls or is blocked (regulatory/environmental), timber prices fall, the activist leaves, the 'strategic review' produces nothing.",
+    "Sets category-correct sell triggers: sell on realization (sale/spin/REIT conversion re-rates the assets) or if the catalyst dies - not on quarterly earnings noise.",
+    "Every figure cites a source + as-of date."
+  ],
+  "grade": {"verdict_allowed": ["Buy candidate", "Watchlist"], "require_full_note": true}
+}

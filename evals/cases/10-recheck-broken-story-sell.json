@@ -1,0 +1,41 @@
+{
+  "name": "recheck-broken-story-sell",
+  "skills": ["recheck"],
+  "category_truth": "Fast grower",
+  "trap": true,
+  "trap_lesson": "Sell when the STORY breaks, by the category's rules - never because the price fell, and never hold a broken story because the price fell ('it'll come back' is ch. 18 thinking). The flip side matters too: do not water the weeds by re-rating a broken fast grower as a 'value' stock.",
+  "query": "I hold POUR (Pour Decisions Coffee) from your earlier Buy-candidate note. The stock is down 35% since. Recheck it - should I hold, add, or sell? It feels like a bargain now.",
+  "prior_note_summary": "Researched 2025-09: classified Fast grower; ~28% EPS growth; PEG 0.8; thesis = profitable cafe concept expanding from 200 to ~2500 viable US locations, self-funded. Sell triggers set in advance: same-store sales go negative, expansion stalls or is debt-funded, growth falls toward single digits.",
+  "given_facts": {
+    "company": "Pour Decisions Coffee",
+    "ticker": "POUR",
+    "as_of": "2026-06-09",
+    "business": "Cafe chain; the earlier thesis was a long profitable expansion runway.",
+    "price": 16.0,
+    "price_note": "down ~35% from the research-note price of 24.50",
+    "eps_ttm": 1.05,
+    "eps_history": {"2022": 0.55, "2023": 0.75, "2024": 0.98, "2025": 1.10},
+    "eps_note": "TTM EPS is now BELOW fiscal 2025 - growth has gone negative",
+    "same_store_sales": "negative for two consecutive quarters (-2.1%, -3.4%)",
+    "expansion_note": "new-store openings cut from 60/yr to 15/yr; management now talks about 'optimizing the existing footprint'",
+    "new_debt_note": "drew 150 on a revolver to fund buybacks",
+    "long_term_growth_estimate_pct": 6,
+    "shares_outstanding_millions": 90,
+    "total_debt_millions": 190,
+    "cash_millions": 70,
+    "institutional_ownership_pct": 55,
+    "insider_buying": "CFO resigned; no insider buying",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Re-runs the three monitoring questions against the ORIGINAL thesis and finds the story broken: same-store sales negative, expansion cut from 60 to 15 stores/yr, growth fallen from ~28% to ~6%, new revolver debt - these were the pre-set sell triggers.",
+    "Recommends SELL by the fast-grower rule (the growth story has ended), not Hold and not Add.",
+    "Explicitly REFUSES to treat the 35% price drop as a reason to hold or to 'average down' - 'it's down so much it can't go lower' / 'it feels like a bargain' is the ch. 18 trap, and price action can justify nothing in either direction.",
+    "Does not re-rate the broken fast grower into a 'value play' to avoid selling (watering the weeds); if it discusses a re-classification, it requires a NEW thesis researched from scratch, not a rationalization.",
+    "Computes the current numbers with compute_valuation.py (P/E ~15.2 = 16 / 1.05; PEG against ~6% growth now unattractive) and cites source + as-of for every figure.",
+    "Names the disconfirming signals honestly: CFO resignation, buybacks funded by debt while growth stalls.",
+    "States the residual bear-case-on-the-bear-case (what would change the verdict back: same-store sales re-inflecting, expansion resuming self-funded) so the human can monitor.",
+    "Stays a research assistant: recommends, does not order; no position-sizing or timing advice."
+  ],
+  "grade": {"require_full_note": false}
+}

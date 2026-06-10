@@ -92,7 +92,11 @@ class TestAdvisoryWarns(unittest.TestCase):
 
 class TestRealNotes(unittest.TestCase):
     def test_all_real_notes_are_structurally_complete(self):
-        paths = sorted(glob.glob(os.path.join(RESEARCH, "*.md")))
+        # A research NOTE is the .md half of a <TICKER>.md/<TICKER>.data.json
+        # provenance pair; other markdown in research/ (e.g. lessons.md, the
+        # append-only surprises journal) is not held to note structure.
+        paths = sorted(p for p in glob.glob(os.path.join(RESEARCH, "*.md"))
+                       if os.path.exists(p[:-3] + ".data.json"))
         self.assertTrue(paths, "no research/*.md found")
         for p in paths:
             with open(p) as fh:

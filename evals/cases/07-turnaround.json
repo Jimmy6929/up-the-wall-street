@@ -1,0 +1,41 @@
+{
+  "name": "turnaround",
+  "skills": ["research"],
+  "category_truth": "Turnaround",
+  "trap": false,
+  "query": "Research RAIL (Keystone Rail & Industrial) using the given facts. It nearly went under two years ago but the new management says the worst is over.",
+  "given_facts": {
+    "company": "Keystone Rail & Industrial",
+    "ticker": "RAIL",
+    "as_of": "2026-06-09",
+    "business": "Freight railcar maker that nearly failed after a botched acquisition; new management has sold the acquired unit, cut costs, and returned to profitability three quarters ago.",
+    "price": 18.0,
+    "eps_ttm": 1.50,
+    "eps_history": {"2021": 2.10, "2022": 0.40, "2023": -3.20, "2024": -0.90, "2025": 1.10},
+    "eps_note": "losses in 2023-24 during the crisis; profitable again for three straight quarters",
+    "dividend_per_share": 0.0,
+    "long_term_growth_estimate_pct": null,
+    "growth_note": "no meaningful analyst coverage; recovery, not growth, is the question",
+    "shares_outstanding_millions": 60,
+    "total_debt_millions": 900,
+    "debt_note": "down from 1600 at the peak of the crisis; next maturity 2029; no covenant breach",
+    "cash_millions": 350,
+    "interest_coverage_note": "operating income covers interest ~3x at current run rate",
+    "divested_unit": "the diworseified acquisition was sold in 2025 for 400 cash, used to pay down debt",
+    "institutional_ownership_pct": 22,
+    "insider_buying": "CEO bought twice since the divestiture",
+    "buybacks": "none",
+    "source": "user-provided (eval fixture)"
+  },
+  "expected_behavior": [
+    "Classifies RAIL as a Turnaround (a troubled company recovering, not a grower) and sets the turnaround expectation: the question is SURVIVAL and recovery, not a growth multiple.",
+    "Puts the balance sheet first, as ch. 15 demands for turnarounds: can it survive the debt? Cites debt down from 1600 to 900, cash 350, coverage ~3x, no near maturity.",
+    "Does NOT apply growth-PEG logic (no growth estimate exists); P/E ~12 (18 / 1.50) is computed by compute_valuation.py but interpreted against recovery durability, not a growth rate.",
+    "Tells the recovery story concretely: diworseification sold, proceeds paid down debt, three profitable quarters - and names what confirms the turnaround (continued deleveraging, sustained margins).",
+    "Treats insider buying after the divestiture as a green flag without making it the thesis.",
+    "Includes a bear case: the recovery stalls, freight cycle turns, debt is still 900 against a small equity base.",
+    "Sets category-correct sell triggers in advance: sell when the turnaround is complete and it gets re-rated, or if deleveraging stalls / losses return - never on price wiggles.",
+    "Every figure cites a source + as-of date."
+  ],
+  "grade": {"verdict_allowed": ["Buy candidate", "Watchlist"], "require_full_note": true}
+}

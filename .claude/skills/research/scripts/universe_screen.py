@@ -60,6 +60,18 @@ SLOW_MAX = 5             # CAGR < 5%        -> Slow grower
 STALWART_MAX = 15        # 5-15%            -> Stalwart
 FAST_MIN = 20            # >= 20%           -> Fast grower (5-20% gap -> "Moderate grower")
 # CAGR >= UNSUSTAINABLE_GROWTH (50, imported) -> manual review (rarely sustainable)
+PER_SHARE_BAND = (0.6, 1.6)   # NI/shares vs reported FY EPS: outside this band the
+#   share count doesn't match the EPS basis (dual-class line, big NCI, wrong share
+#   tag) and EVERY per-share number is suspect -> manual. Wide on purpose: it must
+#   tolerate weighted-average-vs-point-in-time share counts and dilution, and only
+#   catch basis errors (which are ~2x+), never ordinary buybacks.
+
+# A bank's/insurer's cash - debt is NOT Lynch net cash: deposits, reserves and
+# policy liabilities are operating liabilities, so the figure is meaningless
+# (the BFC "-3510.94/sh" artifact). Any of these us-gaap tags marks a financial.
+FINANCIAL_TAGS = ("Deposits", "InterestAndDividendIncomeOperating",
+                  "LiabilityForFuturePolicyBenefits", "PolicyholderContractDeposits",
+                  "SeparateAccountAssets")
 
 DISCLAIMER = ("Live discovery screen, NOT a backtester. Survivorship + look-ahead "
               "biased by construction (currently-listed filers, latest/restated "
@@ -107,6 +119,8 @@ def gate(rec, years):
         return "manual", None, "negative earnings year in window"
     if (rec.get("n_share_classes") or 1) > 1:
         return "manual", None, "multi-class shares (per-share math unreliable)"
+    if rec.get("per_share_check"):
+        return "manual", None, f"per-share math inconsistent ({rec['per_share_check']})"
     for (y0, v0), (y1, v1) in zip(recent, recent[1:]):
         if v0 > 0 and (v1 - v0) / v0 < -CYCLICAL_DROP_PCT / 100:
             return "manual", None, f"possible_cyclical (EPS dropped >{CYCLICAL_DROP_PCT}% in {y1})"
@@ -190,10 +204,13 @@ def render_scan_results(result, date_str):
     for i, r in enumerate(result["ranked"], 1):
         rec, m = r["rec"], r["metrics"]
         flags = ", ".join(f for f in m.get("flags", []) if f not in ("no_debt",)) or "-"
+        # cash - debt is meaningless for a bank/insurer (deposits & reserves are
+        # operating liabilities), so never display it as Lynch net cash.
+        nc = "n/m (financial)" if rec.get("is_financial") else m.get("net_cash_per_share")
         L.append("| {i} | {t} | {c} | {cat} | {g} | {pe} | {peg} | {da} | {nc} | {fl} | {ps} | {fs} |".format(
             i=i, t=rec.get("ticker", "?"), c=rec.get("company", "?"), cat=r["category"],
             g=m.get("growth_used_pct"), pe=m.get("pe"), peg=m.get("peg"),
-            da=m.get("dividend_adjusted_peg"), nc=m.get("net_cash_per_share"),
+            da=m.get("dividend_adjusted_peg"), nc=nc,
             fl=flags, ps=_prov(rec, "price"), fs=_prov(rec, "fund")))
     L += ["", "_P/E uses TTM EPS where available (FY fallback labeled). div-adj PEG uses latest "
           "declared DPS and may include specials - verify._", ""]
@@ -245,27 +262,60 @@ def _period_days(item):
 
 
 def ttm_eps_from_facts(facts):
-    """Sum the 4 most recent ~quarterly diluted-EPS facts -> TTM. Returns
-    (eps, source_label, as_of) or (None, None, None) if 4 clean quarters aren't
-    available (caller falls back to latest FY EPS)."""
+    """Chain the 4 most recent CONSECUTIVE ~quarterly diluted-EPS facts -> TTM.
+    Consecutive means each quarter starts within days of the previous one's end,
+    so the four tile one trailing year. Without that check, a seasonal filer
+    whose only standalone quarterly facts are the SAME big quarter from four
+    different years (H&R Block's tax season) sums to a fantasy EPS (the HRB
+    P/E-1.82 artifact). Returns (eps, source_label, as_of) or (None, None, None)
+    if a full consecutive year isn't available (caller falls back to FY EPS)."""
     usgaap = facts.get("facts", {}).get("us-gaap", {})
     for tag in fe.CONCEPTS["eps"]:
         units = usgaap.get(tag, {}).get("units", {})
         items = units.get("USD/shares")
         if not items:
             continue
-        by_end = {}
+        quarters = {}
         for it in items:
             d = _period_days(it)
             if d is not None and 80 <= d <= 100 and it.get("end"):
-                by_end[it["end"]] = it["val"]      # latest filing for that quarter-end wins
-        ends = sorted(by_end)[-4:]
-        if len(ends) == 4:
-            return round(sum(by_end[e] for e in ends), 2), f"SEC EDGAR ({tag}, TTM=4q)", ends[-1]
+                quarters[it["end"]] = (it["val"], it["start"])   # latest filing wins
+        end, vals = max(quarters, default=None), []
+        while end is not None and len(vals) < 4:
+            val, start = quarters[end]
+            vals.append(val)
+            s = datetime.date.fromisoformat(start)
+            end = next((e for e in quarters
+                        if 0 <= (s - datetime.date.fromisoformat(e)).days <= 6), None)
+        if len(vals) == 4:
+            return round(sum(vals), 2), f"SEC EDGAR ({tag}, TTM=4q)", max(quarters)
     return None, None, None
 
 
-def build_record_from_cik(cik, ticker, company, ua, years):
+def per_share_check(eps_series, ni_series, shares):
+    """Cross-check the per-share basis: latest common FY's net income / current
+    shares should land near that FY's reported EPS. A gap outside PER_SHARE_BAND
+    means the share count doesn't match the EPS denominator (a dual-class issuer
+    whose listed line is one class - the CHTR case - or a large noncontrolling
+    interest), so PEG/net-cash-per-share built on it would be fiction. Returns a
+    human-readable reason, or None when consistent / not computable."""
+    if not eps_series or not ni_series or not shares:
+        return None
+    common = set(eps_series) & set(ni_series)
+    if not common:
+        return None
+    yr = max(common)
+    reported = eps_series[yr]
+    if not isinstance(reported, (int, float)) or reported <= 0:
+        return None
+    implied = ni_series[yr] / shares
+    lo, hi = PER_SHARE_BAND
+    if not (lo <= implied / reported <= hi):
+        return f"NI/shares implies EPS ~{implied:.2f} vs reported {reported} (FY{yr})"
+    return None
+
+
+def build_record_from_cik(cik, ticker, company, ua, years, n_classes=1):
     """Stage B: pull one survivor's exact companyfacts and assemble a record."""
     facts = fe.cached_json(fe.FACTS_URL.format(cik=cik), ua, f"facts_{cik}.json")
     src = f"SEC EDGAR companyfacts CIK{cik:010d}"
@@ -276,6 +326,10 @@ def build_record_from_cik(cik, ticker, company, ua, years):
     _, ltd_val, ltd_end = fe.latest(facts, fe.CONCEPTS["long_term_debt"], "USD")
     _, cur_val, _ = fe.latest(facts, fe.CONCEPTS["current_debt"], "USD")
     _, sh_val, _ = fe.latest(facts, fe.CONCEPTS["shares"], "shares")
+    # NI-available-to-common first: it shares the EPS numerator's basis, so the
+    # consistency check below doesn't false-alarm on preferred dividends / NCI.
+    _, _, ni_series = fe.annual_series(
+        facts, ["NetIncomeLossAvailableToCommonStockholdersBasic", "NetIncomeLoss"], "USD")
 
     ttm, ttm_src, ttm_end = ttm_eps_from_facts(facts)
     if ttm is None and eps_series:                          # FY fallback, labeled
@@ -286,6 +340,7 @@ def build_record_from_cik(cik, ticker, company, ua, years):
     if ltd_val is not None or cur_val is not None:
         total_debt = (ltd_val or 0) + (cur_val or 0)
 
+    usgaap = facts.get("facts", {}).get("us-gaap", {})
     return {
         "ticker": ticker, "company": company, "cik": cik,
         "eps_history": {str(k): v for k, v in eps_series.items()},
@@ -295,6 +350,9 @@ def build_record_from_cik(cik, ticker, company, ua, years):
         "total_debt": total_debt,
         "cash": cash_val,
         "long_term_growth_estimate_pct": None,
+        "n_share_classes": n_classes,
+        "per_share_check": per_share_check(eps_series, ni_series, sh_val),
+        "is_financial": any(t in usgaap for t in FINANCIAL_TAGS),
         "fund_source": ttm_src or src, "fund_as_of": ttm_end or cash_end or ltd_end,
         "price": None, "price_source": None, "price_as_of": None,
     }
@@ -313,6 +371,38 @@ def _ticker_rank(ticker, title=""):
     first_tok = title.split()[0].upper() if title else ""
     name_match = 0 if (first_tok and ticker.upper() == first_tok) else 1
     return (1 if has_punct else 0, name_match, len(ticker), ticker)
+
+
+def _class_base(ticker):
+    """BRK-A / BRK.B / HEI-A -> BRK / BRK / HEI: a punctuated single-letter
+    suffix is a share-class line. Longer suffixes (WRB-PH preferreds) and
+    unpunctuated notes (TMUSL, DTB) are NOT classes and map to themselves."""
+    if len(ticker) > 2 and ticker[-2] in "-." and ticker[-1].isalpha():
+        return ticker[:-2]
+    return ticker
+
+
+def n_share_classes_from_tickers(tickers):
+    """Count the largest group of one CIK's tickers that collapse to the same
+    base after stripping a class suffix: BRK-A+BRK-B -> 2, HEI+HEI-A -> 2,
+    WRB+WRB-PH -> 1, DTE+DTB+DTG -> 1. >1 means the issuer trades multiple
+    share classes, so per-share math on any single line is unreliable (gate ->
+    manual). Unpunctuated dual listings (GOOG/GOOGL) are NOT caught here - the
+    per_share_check consistency gate is the second layer for those."""
+    groups = {}
+    for tk in tickers:
+        groups[_class_base(tk)] = groups.get(_class_base(tk), 0) + 1
+    return max(groups.values(), default=1)
+
+
+def share_classes_by_cik(tmap):
+    """{cik: n_share_classes} from the SEC ticker map (one CIK, many tickers)."""
+    by_cik = {}
+    for r in tmap.values():
+        tk = r.get("ticker", "")
+        if tk:
+            by_cik.setdefault(int(r["cik_str"]), []).append(tk)
+    return {cik: n_share_classes_from_tickers(tks) for cik, tks in by_cik.items()}
 
 
 def stage_a_survivor_ciks(ua, years, end_year):
@@ -389,10 +479,12 @@ def main():
         records = load_fixture_records(args.fixtures)
     elif args.tickers:
         records = []
+        classes = share_classes_by_cik(fe.cached_json(fe.TICKERS_URL, args.ua, "company_tickers.json"))
         for tk in [t.strip().upper() for t in args.tickers.split(",") if t.strip()]:
             try:
                 cik, title = fe.ticker_to_cik(tk, args.ua)
-                records.append(build_record_from_cik(cik, tk, title, args.ua, args.years))
+                records.append(build_record_from_cik(cik, tk, title, args.ua, args.years,
+                                                     n_classes=classes.get(cik, 1)))
                 time.sleep(args.sleep)
             except Exception as e:
                 print(f"# skip {tk}: {e}", file=sys.stderr)
@@ -413,13 +505,15 @@ def main():
             prev = cik_to_tt.get(cik)
             if prev is None or _ticker_rank(tk, title) < _ticker_rank(prev[0], prev[1]):
                 cik_to_tt[cik] = (tk, title)
+        classes = share_classes_by_cik(tmap)
         records = []
         for cik in survivors:
             tk, title = cik_to_tt.get(cik, ("", ""))
             if not tk:
                 continue
             try:
-                records.append(build_record_from_cik(cik, tk, title, args.ua, args.years))
+                records.append(build_record_from_cik(cik, tk, title, args.ua, args.years,
+                                                     n_classes=classes.get(cik, 1)))
                 time.sleep(args.sleep)
             except Exception as e:
                 print(f"# skip CIK{cik}: {e}", file=sys.stderr)

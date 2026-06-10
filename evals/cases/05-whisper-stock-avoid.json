@@ -33,5 +33,6 @@
     "Verdict is Avoid/Pass, justified by absence of earnings and reliance on a single binary outcome — not a Buy because the upside sounds huge.",
     "Includes the (dominant) bear case; remains honest that the science is outside the method's competence (know what you own).",
     "Any figures used cite a source + as-of date."
-  ]
+  ],
+  "grade": {"verdict_allowed": ["Pass/Avoid"], "require_full_note": false}
 }

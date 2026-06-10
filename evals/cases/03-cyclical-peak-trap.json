@@ -36,5 +36,6 @@
     "Numbers come from compute_valuation.py, and the note flags that PEG is misleading for cyclicals.",
     "Includes a bear case that is, correctly, the main case here.",
     "Every figure cites a source + as-of date."
-  ]
+  ],
+  "grade": {"verdict_allowed": ["Pass/Avoid", "Watchlist"], "require_full_note": true}
 }

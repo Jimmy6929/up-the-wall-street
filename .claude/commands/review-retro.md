@@ -77,5 +77,6 @@ Print:
 ## Cadence & hygiene
 
 - Run after every escalation, after any human-overridden FAIL, or every ~10 ledger rows — whichever comes first. More often is churn; the signal is incidents, not the calendar.
+- **Drift check (monthly):** even with no incidents and no rubric edits, re-run **/review-fixtures** if the latest `fixture-scores.tsv` row is older than ~30 days. Judge behavior drifts with model/config changes (e.g., a `judgeModel` switch) — the calibration set only protects you if it's actually re-scored. A monthly re-score with zero deltas is cheap insurance, and a score drop with *unchanged* rubrics is itself an incident to mine.
 - **Rule lifecycle**: while reflecting, list rules added by *past* retros that no subsequent review has cited (search the ledger summaries and recent review output). A rule that never fires across two consecutive retros is a deletion candidate — propose the deletion as one of your 2 deltas (per-rule hit-rate pruning, ACE-style).
 - If the same finding gets reverted twice, stop proposing rubric deltas for it and escalate to the human: the gap is probably in the **fixtures** (a case the frozen eval doesn't cover yet) — only the human may add one.

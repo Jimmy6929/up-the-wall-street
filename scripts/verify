@@ -24,5 +24,28 @@ python3 "$SCRIPTS/validate_data.py" research/*.data.json
 echo "== markdown source/as-of coverage (advisory) =="
 python3 "$SCRIPTS/check_research_markdown.py" --warn-only research/*.md
 
+echo "== note staleness (advisory; Lynch rechecks the story every few months) =="
+python3 - <<'PY'
+import datetime, glob, re
+STALE_DAYS = 100
+today = datetime.date.today()
+for path in sorted(glob.glob("research/*.md")):
+    m = re.search(r"^reviewed:\s*(\d{4}-\d{2}-\d{2})", open(path).read(), re.MULTILINE)
+    if not m:
+        print(f"  WARN {path}: no 'reviewed:' date in frontmatter")
+        continue
+    age = (today - datetime.date.fromisoformat(m.group(1))).days
+    if age > STALE_DAYS:
+        print(f"  WARN {path}: last rechecked {age} days ago - run /recheck")
+print("  (advisory only)")
+PY
+
+echo "== research evals (advisory; the expensive gate is scripts/evals) =="
+if [ -f evals/scores.tsv ]; then
+  echo "  last score: $(tail -n 1 evals/scores.tsv)"
+else
+  echo "  no eval scores recorded yet - run scripts/evals --smoke"
+fi
+
 echo
 echo "ALL BLOCKING CHECKS PASSED"
