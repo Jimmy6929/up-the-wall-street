@@ -41,6 +41,16 @@ Otherwise continue.
 
 ---
 
+## Step 1.5 — Read the lessons back
+
+```bash
+tail -30 "$ROOT/.claude/review-local/lessons.md" 2>/dev/null || echo "NO_LESSONS"
+```
+
+Pick the **up to 3 entries most relevant to this diff** (same files, same kind of change, same failure mode). Memory only helps if it's read back into the attempt (Reflexion): include the selected entries verbatim in each reviewer prompt in Step 3 as `Relevant lessons from past reviews: <entries>`, and keep them in mind yourself when acting on feedback. If none are relevant, pass none — injecting irrelevant lessons measurably hurts (retrieval ablations favor 1 relevant over many).
+
+---
+
 ## Step 2 — Resolve the hard signals
 
 Hard signals are deterministic, **non-overridable** ground-truth checks. They are the part of this loop immune to same-model sycophancy, so treat them as authoritative.
@@ -74,6 +84,8 @@ In a **single message with multiple tool calls**, do all of these concurrently:
 
 4. One or more `Bash` calls running the hard-signal commands resolved in Step 2. Capture each command's exit code (append `; echo "---<NAME> EXIT $?---"`).
 
+Append the Step 1.5 lessons (if any) to each reviewer prompt.
+
 **All calls go in a single message** so they run in parallel — keep review latency low.
 
 > Note on judgeModel: the reviewer agents default to `model: inherit` (same model as you). To use a different judge model for this project, set `judgeModel` in .claude/review-local.json to `opus`, `sonnet`, or `haiku`, and pass it as the `model` option on each Agent call. The research basis: same-model review carries a self-preference bias; a different family mitigates it. The adversarial "default-to-FAIL" prompts + hard signals are the in-loop mitigations when the judge shares the coder's model.
@@ -86,6 +98,8 @@ In a **single message with multiple tool calls**, do all of these concurrently:
 - **Overall FAIL** = any reviewer FAIL **OR** any hard signal non-zero exit.
 
 Hard signals are **non-overridable**: any hard FAIL forces overall FAIL even if all 3 reviewers PASS. This guards against same-model sycophancy.
+
+Reviewers may also emit **`NOTES (non-blocking)`** — concerns that didn't meet their evidence bar. Notes **never** affect the verdict. Collect them, count them, and include them in the final report so the human sees them.
 
 ---
 
@@ -121,6 +135,19 @@ Create `$ROOT/.claude/review-local/` if needed and write `$ROOT/.claude/review-l
 }
 ```
 The Stop hook reads `diff_sha` + `verdict` to decide whether a prior PASS still covers the current diff.
+
+Then append one row to the **ledger** `$ROOT/.claude/review-local/review-log.tsv` (tab-separated; create with this header row if the file is missing):
+
+```
+timestamp	task_id	attempt	verdict	project_goal	task_goal	senior_engineer	hard_signals	notes	summary
+```
+
+- `verdict`: `PASS` | `FAIL` | `ESCALATED`.
+- `hard_signals`: comma-joined `name:pass|fail|skipped`, or `none`.
+- `notes`: count of non-blocking notes across reviewers.
+- `summary`: one short plain phrase for what the diff was.
+
+The ledger is **append-only — never rewrite, sort, or trim it**. `last-review.json` answers "what just happened"; the ledger answers "what keeps happening" — it is the raw data `/review-retro` mines for false-rejection patterns and rule hit-rates.
 
 ---
 
@@ -160,6 +187,8 @@ I will now address these and re-run review.
 ```
 Then **act on the required changes** — fix each one — and automatically re-invoke `/review-local`. Do NOT report "done" to the user until PASS or escalation.
 
+**A retry must be a fix, not a re-roll.** Before re-invoking, you must be able to map each required change to a specific edit you made addressing it. Self-correction research shows untargeted retries saturate immediately (deep errors don't yield to a re-spin). If you cannot map an edit to every finding — because a finding is wrong, ambiguous, or needs a design decision — the right move is to say so and let the loop escalate, not to shuffle code.
+
 ### If FAIL and attempts >= maxAttempts:
 Go to Step 7-escalation below.
 
@@ -197,6 +226,7 @@ Go to Step 7-escalation below.
 ```
 - <YYYY-MM-DD> · <slug> · <maxAttempts>x review fail · see .claude/review-local/escalations/<filename>
 ```
+   Also append a ledger row to `review-log.tsv` with verdict `ESCALATED` (same columns as Step 6).
 4. Print:
 ```
 ⚠ /review-local: ESCALATED after <maxAttempts> failed attempts.
@@ -220,3 +250,4 @@ I am stopping here. Please review and clarify.
 - Hard signals are **non-overridable ground truth**. Any hard FAIL forces overall FAIL.
 - `.claude/review-local/` (state) is gitignored. The config `.claude/review-local.json` and these `.claude/` files are tracked so the fork travels with the repo.
 - This is a fork: the global `/review` command, global reviewer agents, and global Stop hook are all separate and unaffected by edits here.
+- **The loop learns, on a frozen eval.** `.claude/review-fixtures/` holds labeled calibration diffs (the loop's `val_bpb`) — run `/review-fixtures` to score the reviewers against them; run `/review-retro` to consolidate escalations + the ledger into small rubric deltas, validated against the fixtures with keep-or-revert. The fixtures are **read-only to the improvement loop**: `/review-retro` may edit rubrics, never fixtures. Only a human adds/edits fixture cases.
