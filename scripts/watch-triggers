@@ -1,0 +1,236 @@
+#!/usr/bin/env python3
+"""watch-triggers - deterministic watchlist monitor. The free layer.
+
+Reads research/triggers.json (per-ticker triggers compiled from the research
+notes) and checks, with no LLM involved:
+  - new SEC filings (10-K/10-Q/8-K/...) per ticker via the free EDGAR
+    submissions API, against the accession numbers already seen;
+  - new Form 4s (and 4/A) that report an open-market PURCHASE (transaction
+    code P) for tickers whose notes name an insider buy as an upgrade trigger;
+  - price-vs-fundamental thresholds from the notes (yfinance, screening-only,
+    optional - degrades gracefully without it).
+
+A fired trigger NEVER means buy/sell - it means "the story has a new reportable
+fact: run /recheck <TICKER>". Lynch monitors the story, not the screen, so the
+right cadence is one quiet daily poll (cron), escalation only on events, and a
+weekly heartbeat so silence provably means "nothing happened".
+
+Baselining is PER TICKER: the first successful fetch for a ticker marks its
+existing filings as seen without firing (so history never floods the alerts,
+even if another ticker's fetch failed that day). An unreadable Form 4 is never
+marked seen - it is retried next run, not silently swallowed.
+
+Usage:
+    scripts/watch-triggers --check     # poll; print report; exit 2 if fired, 0 quiet
+    scripts/watch-triggers --digest    # one-line heartbeat (next known event etc.)
+    scripts/watch-triggers --reset     # forget state; next check re-baselines
+
+State (seen accessions, per-ticker baselines, last digest) lives in
+.watch-state.json (gitignored). Alerts append to research/alerts.md (tracked -
+it is part of the record). Cron wiring: scripts/watch-cron. Stdlib only.
+"""
+import datetime
+import json
+import os
+import sys
+import urllib.request
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TRIGGERS = os.path.join(ROOT, "research", "triggers.json")
+STATE = os.path.join(ROOT, ".watch-state.json")
+ALERTS = os.path.join(ROOT, "research", "alerts.md")
+SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
+ARCHIVES_URL = ("https://www.sec.gov/Archives/edgar/data/{cik}/"
+                "{acc_nodash}/{doc}")
+UA = os.environ.get("SEC_EDGAR_USER_AGENT",
+                    "Up the Wall Street research-agent (set-your-contact@example.com)")
+
+
+def http(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return resp.read()
+
+
+def load_json(path, default):
+    try:
+        with open(path) as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return default
+
+
+def recent_filings(cik, limit=40):
+    """[(form, accession, filing_date, primary_doc)] newest-first from EDGAR."""
+    data = json.loads(http(SUBMISSIONS_URL.format(cik=cik)))
+    r = data.get("filings", {}).get("recent", {})
+    rows = list(zip(r.get("form", []), r.get("accessionNumber", []),
+                    r.get("filingDate", []), r.get("primaryDocument", [])))
+    return rows[:limit]
+
+
+def form4_is_open_market_buy(cik, accession, primary_doc):
+    """True/False: the RAW Form 4 XML does/doesn't contain a code-P purchase.
+    None: the document couldn't be read (caller must RETRY, never swallow).
+
+    The submissions API prefixes primaryDocument with an XSL renderer path
+    (e.g. 'xslF345X06/wk-form4_1.xml') - fetching that returns rendered HTML
+    with no <transactionCode> tags at all; the raw XML lives at the bare
+    filename in the same archive directory."""
+    doc = primary_doc.split("/")[-1]
+    try:
+        xml = http(ARCHIVES_URL.format(cik=cik, acc_nodash=accession.replace("-", ""),
+                                       doc=doc)).decode("utf-8", "replace")
+    except Exception:
+        return None
+    return "<transactionCode>P</transactionCode>" in xml
+
+
+def screening_price(ticker):
+    """(price, quote_date, error) - yfinance, screening-only (threshold checks
+    only; never cited in a note; the alert stamps the REAL quote date)."""
+    try:
+        import yfinance as yf
+    except ImportError:
+        return None, None, "yfinance not installed - price rules skipped"
+    try:
+        hist = yf.Ticker(ticker).history(period="5d")
+        if len(hist):
+            px = round(float(hist["Close"].iloc[-1]), 2)
+            if px > 0:
+                return px, str(hist.index[-1].date()), None
+            return None, None, "non-positive quote"
+    except Exception as e:
+        return None, None, f"price fetch failed: {e}"
+    return None, None, "no quote"
+
+
+def check(triggers, state):
+    """Returns (fired, notes). Mutates state: seen_accessions, baselined_tickers,
+    price_rules_fired. A ticker's first successful fetch baselines it (history
+    -> seen, no alerts); unreadable Form 4s stay unseen for retry."""
+    fired, notes = [], []
+    seen = set(state.get("seen_accessions", []))
+    baselined = set(state.get("baselined_tickers", []))
+    for ticker, cfg in triggers["tickers"].items():
+        cik = cfg["cik"]
+        try:
+            filings = recent_filings(cik)
+        except Exception as e:
+            notes.append(f"{ticker}: EDGAR unreachable ({e}) - will retry next run")
+            continue
+        is_baseline = ticker not in baselined
+        for form, acc, date, doc in filings:
+            if acc in seen:
+                continue
+            if is_baseline:                  # first successful fetch: swallow history
+                seen.add(acc)
+                continue
+            base = form.split("/")[0]
+            if form in cfg.get("watch_forms", []) or base in cfg.get("watch_forms", []):
+                fired.append({"ticker": ticker, "kind": f"filing:{form}",
+                              "detail": f"{form} filed {date} (accession {acc})"})
+                seen.add(acc)
+            elif base == "4" and cfg.get("insider_buys"):
+                buy = form4_is_open_market_buy(cik, acc, doc)
+                if buy is None:              # unreadable -> retry next run, say so
+                    notes.append(f"{ticker}: Form 4 {acc} unreadable - will retry next run")
+                    continue
+                if buy:
+                    fired.append({"ticker": ticker, "kind": "insider-buy",
+                                  "detail": f"Form 4 open-market purchase (code P) filed {date} "
+                                            f"(accession {acc}) - verify who/size"})
+                seen.add(acc)
+            else:
+                seen.add(acc)
+        baselined.add(ticker)
+        for rule in cfg.get("price_rules", []):
+            if rule.get("type") != "price_below":
+                notes.append(f"{ticker}: unknown price rule type {rule.get('type')!r} - ignored")
+                continue
+            px, asof, err = screening_price(ticker)
+            if err:
+                notes.append(f"{ticker}: {err}")
+            elif px <= rule["value"]:
+                key = f"{ticker}:price_below:{rule['value']}"
+                if key not in state.get("price_rules_fired", []):
+                    fired.append({"ticker": ticker, "kind": "valuation-threshold",
+                                  "detail": f"price {px} (quote {asof}) <= {rule['value']} "
+                                            f"({rule['label']}) - screening-only; "
+                                            "re-source at recheck"})
+                    state.setdefault("price_rules_fired", []).append(key)
+    state["seen_accessions"] = sorted(seen)
+    state["baselined_tickers"] = sorted(baselined)
+    return fired, notes
+
+
+def append_alerts(fired):
+    new = not os.path.exists(ALERTS)
+    with open(ALERTS, "a") as fh:
+        if new:
+            fh.write("# Watch alerts - append-only log from scripts/watch-triggers\n\n"
+                     "A fired trigger means: a reportable fact landed - run /recheck. "
+                     "It is never a verdict.\n\n")
+        for f in fired:
+            fh.write(f"- {datetime.date.today().isoformat()} · {f['ticker']} · "
+                     f"{f['kind']} · {f['detail']}\n")
+
+
+def digest_line(triggers, state, n_fired_today=0):
+    events = [f"{t}: {c['next_known_event']}" for t, c in triggers["tickers"].items()
+              if c.get("next_known_event")]
+    nxt = ("; next known: " + "; ".join(events)) if events else ""
+    return (f"watch-triggers {datetime.date.today().isoformat()}: "
+            f"{len(triggers['tickers'])} names watched, {n_fired_today} trigger(s) fired"
+            f"{nxt}")
+
+
+def run_check(triggers, state):
+    """Shared by --check and --reset: poll, persist, report. Returns exit code."""
+    pre = set(state.get("baselined_tickers", []))
+    fired, notes = check(triggers, state)
+    state["last_fired"] = fired
+    state["last_check"] = datetime.date.today().isoformat()
+    with open(STATE, "w") as fh:
+        json.dump(state, fh, indent=1)
+    newly = sorted(set(state.get("baselined_tickers", [])) - pre)
+    if newly:
+        print(f"baselined {len(newly)} ticker(s) ({', '.join(newly)}): existing filings "
+              "marked seen, no alerts fired on history")
+    for n in notes:
+        print(f"  note: {n}", file=sys.stderr)
+    if not fired:
+        print(digest_line(triggers, state, 0))
+        return 0
+    append_alerts(fired)
+    print(f"🔔 {len(fired)} trigger(s) fired:")
+    for f in fired:
+        print(f"  {f['ticker']} · {f['kind']} · {f['detail']}")
+    print(f"\nlogged to {os.path.relpath(ALERTS, ROOT)} - next: /recheck the fired ticker(s)")
+    return 2
+
+
+def main():
+    args = sys.argv[1:]
+    triggers = load_json(TRIGGERS, None)
+    if not triggers:
+        print(f"no {TRIGGERS} - nothing to watch", file=sys.stderr)
+        return 1
+    state = load_json(STATE, {})
+
+    if "--reset" in args:
+        print("state reset - re-baselining (history will not fire)")
+        return run_check(triggers, {})
+
+    if "--digest" in args:
+        print(digest_line(triggers, state))
+        state["last_digest"] = datetime.date.today().isoformat()
+        with open(STATE, "w") as fh:
+            json.dump(state, fh, indent=1)
+        return 0
+
+    return run_check(triggers, state)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

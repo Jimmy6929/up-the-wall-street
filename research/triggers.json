@@ -1,0 +1,69 @@
+{
+  "_about": "Machine-readable watchlist triggers compiled from each note's 'upgrade/re-examine triggers' (the human-readable truth stays in watchlist.md + research/<T>.md). Read by scripts/watch-triggers. Filing events come free from SEC EDGAR submissions; insider_buys means 'alert on any Form 4 reporting an open-market purchase (code P)'; price rules are valuation thresholds from the notes, checked with a screening-only price and NEVER a verdict by themselves - a fired trigger only means: run /recheck.",
+  "_as_of": "2026-06-11",
+  "tickers": {
+    "PLMR": {
+      "cik": 1761312,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": true,
+      "price_rules": [
+        {"type": "price_below", "value": 72.3, "label": "~2x book (BVPS $36.17 as of 2026-03-31, research/PLMR.md)"}
+      ],
+      "why": "quake GWP re-accel x2 qtrs; cat-tested CR <90%; casualty development; ~2x book; any insider buy"
+    },
+    "CASH": {
+      "cik": 907471,
+      "watch_forms": ["10-K", "10-K/A", "10-Q", "8-K"],
+      "insider_buys": true,
+      "price_rules": [],
+      "why": "FY2026 10-K (Nov) must declare ICFR effective; 2 qtrs of NET INCOME growth; any insider buy"
+    },
+    "FI": {
+      "cik": 798354,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": true,
+      "price_rules": [],
+      "why": "Q2 2026 results (~early Aug): positive organic x2 qtrs, Clover merchants+revenue up together, margins troughing, S&P outlook",
+      "next_known_event": "Q2 2026 results ~2026-08-04"
+    },
+    "BA": {
+      "cik": 12927,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": false,
+      "price_rules": [],
+      "why": "FCF durably positive, MAX 7/10 certified, debt falling (research/BA.md)"
+    },
+    "BRBR": {
+      "cik": 1772016,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": false,
+      "price_rules": [],
+      "why": "EBITDA/margins stabilize 2 qtrs, guidance stops being cut, leverage falls (research/BRBR.md)"
+    },
+    "CSV": {
+      "cik": 1016281,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": false,
+      "price_rules": [
+        {"type": "price_below", "value": 36.0, "label": "PEG toward ~1.0 needs a much lower price (research/CSV.md; recompute at recheck)"}
+      ],
+      "why": "organic volume re-inflects, leverage to ~3.5x, 2029 notes refinanced on known terms"
+    },
+    "BR": {
+      "cik": 1383312,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": false,
+      "price_rules": [
+        {"type": "price_below", "value": 170.0, "label": "fear-marked toward PEG~1 / ~14x adj EPS (research/BR.md; recompute at recheck)"}
+      ],
+      "why": "own when fear marks it down and/or bookings re-accelerate"
+    },
+    "RKLB": {
+      "cik": 1819994,
+      "watch_forms": ["10-Q", "10-K", "8-K"],
+      "insider_buys": false,
+      "price_rules": [],
+      "why": "re-eval only if Neutron reaches orbit AND FCF turns positive (research/RKLB.md)"
+    }
+  }
+}

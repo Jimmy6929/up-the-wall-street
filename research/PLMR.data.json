@@ -1,0 +1,87 @@
+{
+  "ticker": "PLMR",
+  "company": "Palomar Holdings, Inc.",
+  "cik": 1761312,
+  "category": "Fast grower",
+  "source": "SEC EDGAR companyfacts CIK0001761312 + web-sourced price/estimates (see field-level provenance)",
+  "as_of": "2026-06-10",
+  "_note": "Specialty insurer: cash - debt is NOT meaningful net cash (loss reserves/float are operating liabilities; 'cash' excludes the ~$1.5B+ investment portfolio). net_cash output is n/m for a financial. total_debt is holding-co debt; see debt_to_equity context field.",
+  "inputs": {
+    "price": {
+      "value": 113.34,
+      "source": "stockanalysis.com/stocks/plmr/ - NASDAQ close quote, Jun 10 2026 4:00PM EDT (intraday cross-check ~$109.80-112.00 range same day)",
+      "as_of": "2026-06-10"
+    },
+    "eps_ttm": {
+      "value": 7.17,
+      "source": "SEC EDGAR companyfacts CIK0001761312 (EarningsPerShareDiluted, FY2025); stockanalysis.com also lists $7.17 as TTM EPS as of 2026-06-10. NOTE: FY2025 figure, not TTM-through-Q1-2026 (Q1 2026 was a beat, so TTM is likely modestly higher)",
+      "as_of": "FY2025 (2025-12-31)"
+    },
+    "eps_history": {
+      "value": {
+        "2021": 1.76,
+        "2022": 2.02,
+        "2023": 3.13,
+        "2024": 4.48,
+        "2025": 7.17
+      },
+      "source": "SEC EDGAR companyfacts CIK0001761312 (EarningsPerShareDiluted, annual)",
+      "as_of": "FY series 2021-2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "SEC EDGAR companyfacts - no common dividend tags found; PLMR pays no dividend",
+      "as_of": "FY2025"
+    },
+    "shares_outstanding": {
+      "value": 26514295,
+      "source": "SEC EDGAR companyfacts CIK0001761312 (CommonStockSharesOutstanding)",
+      "as_of": "2026-03-31"
+    },
+    "total_debt": {
+      "value": 297434000,
+      "source": "SEC EDGAR companyfacts CIK0001761312 (LongTermDebt) - holding-co debt",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 56538000,
+      "source": "SEC EDGAR companyfacts CIK0001761312 (CashAndCashEquivalentsAtCarryingValue). Insurer: excludes investment portfolio; cash-minus-debt is n/m as 'net cash' for a financial",
+      "as_of": "2026-03-31"
+    },
+    "stockholders_equity": {
+      "value": 959039000,
+      "source": "SEC EDGAR XBRL companyconcept (us-gaap:StockholdersEquity, 10-Q Q1 2026)",
+      "as_of": "2026-03-31"
+    },
+    "debt_to_equity": {
+      "value": 0.31,
+      "source": "computed: total_debt 297,434,000 / stockholders_equity 959,039,000 (both SEC EDGAR, 2026-03-31), python-computed",
+      "as_of": "2026-03-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": 19.9,
+      "source": "ESTIMATE - analyst consensus EPS growth ~19.9%/yr (public.com forecast page); aggregator range 19.9-22.7% (Simply Wall St 22.7%); next-FY consensus EPS $9.81 (Stockopedia); company FY2026 guidance ~24% adj. net income growth. Conservative end used. Historical FY2021-25 EPS CAGR is ~42% (proven, but decelerating base)",
+      "as_of": "2026-06-10"
+    },
+    "institutional_ownership_pct": {
+      "value": 92.91,
+      "source": "MarketBeat institutional-ownership page (Fintel shows 450 holders / ~25.3M of 26.5M shares ~95%; estimates range 93-98%)",
+      "as_of": "2026-06-10"
+    },
+    "insider_activity": {
+      "value": "Modest routine selling: CEO Mac Armstrong family trust sold 3,500 sh (~$458K, ~1% of his indirect holdings) 2026-04-21; CRO sell-to-cover 281 sh on RSU vest 2026-02-18. No open-market buys found in 2026",
+      "source": "SEC Form 4 filings via StockTitan / secform4.com / Motley Fool filings coverage",
+      "as_of": "2026-04-21"
+    },
+    "combined_ratio_fy2025": {
+      "value": 76.9,
+      "source": "Palomar Q4/FY2025 earnings release (ir.palomarspecialty.com / 8-K ex-99.1): FY2025 combined ratio 76.9%, adjusted combined ratio 72.7% (vs 73.7% FY2024); adjusted ROE 23.6%",
+      "as_of": "FY2025 (2025-12-31)"
+    },
+    "gross_written_premium_growth_fy2025_pct": {
+      "value": 31.5,
+      "source": "Palomar Q4/FY2025 earnings release (ir.palomarspecialty.com / 8-K ex-99.1): FY2025 GWP +31.5% to ~$2.0B; adjusted net income +62% to $216.1M",
+      "as_of": "FY2025 (2025-12-31)"
+    }
+  }
+}

@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# watch-cron - the unattended entry point for the watchlist monitor.
+#
+# Layer 1 (free): scripts/watch-triggers polls SEC EDGAR for the events the
+# research notes are waiting on. Layer 2 (paid, event-only): when a trigger
+# fires, run a headless `/recheck <TICKER>` so a one-paragraph story update -
+# not a raw filing - is waiting for the human. Mondays also emit a one-line
+# heartbeat digest so silence provably means "nothing happened".
+#
+# Install (runs weekday mornings at 08:30; adjust to taste):
+#     crontab -e
+#     30 8 * * 1-5  cd /path/to/up-the-wall-street && scripts/watch-cron >> .watch-cron.log 2>&1
+#
+# Notifications use macOS osascript when available; everything is also written
+# to research/alerts.md (the durable record) and the cron log.
+set -uo pipefail
+cd "$(dirname "$0")/.."
+
+notify() {  # $1 title, $2 body - best-effort desktop notification.
+  # Body may contain LLM output: strip quotes/backslashes and cap length so it
+  # can't break (or smuggle anything into) the AppleScript string.
+  local title body
+  title=$(printf '%s' "$1" | tr -d '"\\' | head -c 80)
+  body=$(printf '%s' "$2" | tr -d '"\\' | head -c 220)
+  command -v osascript >/dev/null 2>&1 && \
+    osascript -e "display notification \"$body\" with title \"$title\"" 2>/dev/null
+  echo "$1: $2"
+}
+
+scripts/watch-triggers --check
+status=$?
+
+if [ "$status" -eq 2 ]; then
+  # Layer 2: one headless /recheck per fired ticker (deduplicated). The prompt
+  # goes via STDIN (a positional prompt can be swallowed by variadic flags).
+  tickers=$(python3 -c "
+import json
+fired = json.load(open('.watch-state.json')).get('last_fired', [])
+print(' '.join(sorted({f['ticker'] for f in fired})))")
+  for t in $tickers; do
+    detail=$(python3 -c "
+import json
+fired = json.load(open('.watch-state.json')).get('last_fired', [])
+print('; '.join(f['kind'] + ' - ' + f['detail'] for f in fired if f['ticker'] == '$t'))")
+    notify "Watchlist trigger: $t" "$detail - running /recheck"
+    printf '%s' "/recheck $t — automated trigger fired: $detail. Re-test the story per the note's triggers, update the note + watchlist.md, and end with a 3-sentence summary." | \
+      claude -p --output-format json --permission-mode acceptEdits --max-turns 60 \
+        --allowedTools "Read,Glob,Grep,Write,Edit,TodoWrite,Task,Skill,WebSearch,WebFetch,Bash(python3:*)" \
+      > ".watch-recheck-$t.json" 2>&1
+    summary=$(python3 -c "
+import json
+try:
+    d = json.load(open('.watch-recheck-$t.json'))
+    out = (d.get('result') or '')[-600:] if not d.get('is_error') else 'RECHECK ERROR: ' + str(d.get('result'))[:200]
+except Exception as e:
+    out = f'recheck output unreadable: {e}'
+print(out)")
+    notify "Recheck done: $t" "$(echo "$summary" | tail -c 200)"
+    echo "---- $t recheck summary ----"; echo "$summary"
+  done
+elif [ "$status" -ne 0 ]; then
+  notify "watch-triggers error" "exit $status - see cron log"
+fi
+
+# Heartbeat: Mondays, or if a digest has never been sent
+never_digested() {
+  ! python3 -c "import json,sys; sys.exit(0 if json.load(open('.watch-state.json')).get('last_digest') else 1)" 2>/dev/null
+}
+if [ "$(date +%u)" = "1" ] || never_digested; then
+  notify "Watchlist heartbeat" "$(scripts/watch-triggers --digest)"
+fi

@@ -24,4 +24,9 @@ scan-results.fixtures.md
 # Eval run artifacts (per-trial notes/transcripts) — the evals/scores.tsv ledger IS tracked
 evals/runs/
 
+# Watchlist monitor state/logs (research/alerts.md IS tracked — it's the record)
+.watch-state.json
+.watch-cron.log
+.watch-recheck-*.json
+
 # Note: research/*.data.json IS tracked on purpose — it's the provenance record.

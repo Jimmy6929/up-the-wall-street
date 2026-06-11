@@ -1,0 +1,76 @@
+{
+  "ticker": "CASH",
+  "company": "PATHWARD FINANCIAL, INC.",
+  "cik": 907471,
+  "category": "Stalwart",
+  "source": "SEC EDGAR companyfacts CIK0000907471 (per-field provenance below)",
+  "as_of": "2026-06-10",
+  "inputs": {
+    "price": {
+      "value": 81.55,
+      "source": "stockanalysis.com quote, close 2026-06-10 4:00 PM EDT; cross-check: web quote $81.29 on 2026-06-09 (TradingEconomics/CNBC via search). NOT yfinance.",
+      "as_of": "2026-06-10"
+    },
+    "eps_ttm": {
+      "value": 8.41,
+      "source": "SEC EDGAR XBRL EarningsPerShareDiluted, script-computed TTM: FY2025 (7.87) - H1 FY2025 (4.35) + H1 FY2026 (4.89); 10-K filed 2025-11-25, 10-Q filed 2026-05-07",
+      "as_of": "2026-03-31"
+    },
+    "eps_history": {
+      "value": {"2021": 4.38, "2022": 5.26, "2023": 5.24, "2024": 7.20, "2025": 7.87},
+      "source": "SEC EDGAR XBRL EarningsPerShareDiluted, annual 10-K values; fiscal years end Sep 30; FY2023 (5.99->5.24) and FY2024 (6.62->7.20) AS RESTATED per Aug-2025 10-K/A and FY2025 10-K (filed 2025-11-25)",
+      "as_of": "FY2025 (2025-09-30), filed 2025-11-25"
+    },
+    "dividend_per_share": {
+      "value": 0.20,
+      "source": "SEC EDGAR XBRL CommonStockDividendsPerShareDeclared, FY2025 10-K ($0.05/qtr; flat at $0.20/yr since at least FY2020)",
+      "as_of": "FY2025 (2025-09-30)"
+    },
+    "shares_outstanding": {
+      "value": 21110034,
+      "source": "SEC EDGAR dei:EntityCommonStockSharesOutstanding, Q2 FY2026 10-Q cover (filed 2026-05-07); consistent with $1.72B mkt cap / $81.55",
+      "as_of": "2026-04-29"
+    },
+    "total_debt": {
+      "value": 42508000,
+      "source": "SEC EDGAR XBRL LongTermDebt+DebtCurrent per fetch_edgar.py. BANK: excludes ~$7B deposits (operating liabilities); cash-minus-debt net cash is NOT meaningful for a bank - display n/m",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 157602000,
+      "source": "SEC EDGAR XBRL CashAndCashEquivalentsAtCarryingValue per fetch_edgar.py. BANK: excludes investment securities portfolio; net-cash display n/m",
+      "as_of": "2026-03-31"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": 11.8,
+      "source": "ESTIMATE (1-yr forward, not long-term consensus): management FY2026 EPS guidance $8.55-$9.05, midpoint $8.80, reaffirmed in Q2 FY2026 release (2026-04-22), vs FY2025 actual $7.87 = +11.8% (script-computed). Street consensus FY2026 ~$8.63-$8.70 (+10-11%), via MarketsDaily/CerbatGem 2026-04. Deliberately NOT the scan's 35.6% 5-yr CAGR, which was an artifact of quarterly-mislabeled EDGAR frames; true restated FY2021->FY2025 CAGR is 15.8% (script-computed)",
+      "as_of": "2026-04-22"
+    },
+    "institutional_ownership_pct": {
+      "value": 92.7,
+      "source": "MarketBeat institutional-ownership page (13F aggregate), via web search; ~597 institutional holders per Fintel",
+      "as_of": "2026-02 (approx, latest 13F aggregate)"
+    },
+    "insider_activity": {
+      "value": "selling, modest director-level: no insider buys in trailing 12 months; Dir. Perretta sold 1,450 sh @ $89.94 (2026-01-30); Dir. Hajek sold @ ~$86.37 avg (2026-04-29); Dir. Hoople sold @ ~$82.29 avg (2026-05-29); EVP/CRO Ferri received 8,638 RSUs (award, not a sale)",
+      "source": "SEC Form 4 filings via StockTitan / Sahm Capital (2026-02-13), web search",
+      "as_of": "2026-05-29"
+    },
+    "buybacks": {
+      "value": "Consistent, large repurchaser: shares outstanding 33.45M (2020-11) -> 30.55M (2021-11) -> 28.47M (2022-11) -> 25.99M (2023-11) -> 24.12M (2024-11) -> 22.34M (2025-11) -> 21.11M (2026-04); ~-37% over ~5.5 years",
+      "source": "SEC EDGAR dei:EntityCommonStockSharesOutstanding, 10-K/10-Q cover pages FY2020-Q2 FY2026",
+      "as_of": "2026-04-29"
+    },
+    "earnings_mix": {
+      "value": "FY2025 revenue: net interest income $511.8M (60.9%) vs noninterest/fee income $328.1M (39.1%) of $839.9M total. H1 FY2026 (tax-season-weighted): NII $244.5M (54.4%) vs noninterest $204.9M (45.6%) of $449.4M. Interpretive note: the NII itself is earned on a balance sheet funded by deposits gathered through the same BaaS/partner programs, so the fee% understates the payments ecosystem's economic contribution; bottoms-up segment earnings split not separately extracted",
+      "source": "SEC EDGAR XBRL InterestIncomeExpenseNet + NoninterestIncome + Revenues; FY2025 10-K (filed 2025-11-25) and Q2 FY2026 10-Q (filed 2026-05-07); percentages script-computed",
+      "as_of": "2026-03-31"
+    }
+  },
+  "caveats": [
+    "BANK: net cash (cash - debt) is n/m; deposits are the funding base and are excluded from total_debt",
+    "RESTATEMENT: Aug-2025 10-K/A restated FY2024/FY2023 (gross-vs-net presentation + derivative accounting of third-party consumer lending/servicing relationships; retained earnings -$17.4M at 2024-09-30; material weakness in ICFR disclosed for FY2024)",
+    "fetch_edgar.py's frame logic mis-read this Sep-30 FYE company (returned quarterly EPS as annual); all EPS figures above re-extracted from raw companyfacts with full-year duration checks",
+    "growth input is a 1-year forward guidance-based figure, labeled estimate; historical restated 4-yr CAGR 15.8% shown for context"
+  ]
+}

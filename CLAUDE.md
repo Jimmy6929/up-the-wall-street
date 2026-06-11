@@ -24,7 +24,7 @@ Finance is where models hallucinate most convincingly. **Always** compute valuat
 - `python3 .claude/skills/research/scripts/validate_data.py <data.json>` — must pass before you write a verdict.
 - `python3 .claude/skills/research/scripts/universe_screen.py [--tickers ...]` — the market-wide **screen** funnel behind `/scan`. Imports `compute()` so the scan and a `/research` note never disagree on a number. Emits ranked **candidates + a category guess, never a verdict** ([playbook/02a](playbook/02a-screen-at-scale.md)).
 
-Data path with graceful degradation: **SEC EDGAR script → web search → ask the user to paste.** Every figure in a note records where it came from and as of when. If a required number can't be sourced, say so — do not guess. (Exception, `/scan` only: `universe_screen.py` may use **yfinance** for *bulk screening* prices, stamped with their real quote date — never cite a yfinance price in a `/research` note; re-source finalists by hand.)
+Data path with graceful degradation: **SEC EDGAR script → web search → ask the user to paste.** Every figure in a note records where it came from and as of when. If a required number can't be sourced, say so — do not guess. (Enumerated exceptions — screening-only yfinance, stamped with the real quote date, **never cited in a `/research` note**: `universe_screen.py` for `/scan` bulk prices, and `scripts/watch-triggers` for the watchlist monitor's valuation-threshold checks; in both cases finalists/rechecks re-source the price by hand.)
 
 ## Output conventions
 - Research notes go in `research/<TICKER>.md` (from `templates/research-note.md`); keep the `research/<TICKER>.data.json` beside it as the provenance record.

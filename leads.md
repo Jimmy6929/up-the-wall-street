@@ -100,9 +100,9 @@
 | 2026-06-10 | FOR / Forestar Group Inc. | screen 06-10: DHI owns 62% + ~74% of revenue (single customer) at housing peak | passed |
 | 2026-06-10 | YELP / YELP INC | screen 06-10: slow grower; buyback cannibal w/ net cash, but AI-search threat is the whole question (real PEG >2) | maybe |
 | 2026-06-10 | SKWD / Skyward Specialty Insurance Group, Inc. | screen 06-10: real specialty grower but 95% institutional, insider selling, E&S softening | maybe |
-| 2026-06-10 | FISV / FISERV INC | screen 06-10: busted stalwart -75%; research under TURNAROUND rules (ticker now FI - re-source by hand) | researching |
+| 2026-06-10 | FISV / FISERV INC | researched 06-10 as FI: Watchlist - survival proven, recovery not evidenced (organic -4%); see research/FI.md | watchlist |
 | 2026-06-10 | ASO / Academy Sports & Outdoors, Inc. | screen 06-10: flat-earnings discretionary retailer with big buybacks; no fast grower | maybe |
-| 2026-06-10 | CASH / PATHWARD FINANCIAL, INC. | screen 06-10: sponsor-bank/tax-refund fee niches + buybacks, ignored; research must split fee vs rate earnings | researching |
+| 2026-06-10 | CASH / PATHWARD FINANCIAL, INC. | researched 06-10: Pass/Avoid for now - unremediated material weakness + flat organic NI; see research/CASH.md | passed |
 | 2026-06-10 | FCCO / FIRST COMMUNITY CORP /SC/ | screen 06-10: rate-cycle NIM bounce dressed as growth | passed |
 | 2026-06-10 | FMBH / FIRST MID BANCSHARES, INC. | screen 06-10: IL bank w/ insurance fee niche; re-run as stalwart at ~12x (PEG 0.28 fake; div data corrupt) | maybe |
 | 2026-06-10 | CZNC / CITIZENS & NORTHERN CORP | screen 06-10: flat rural bank; CAGR is 2020-provision-base artifact | passed |
@@ -110,7 +110,7 @@
 | 2026-06-10 | CPF / CENTRAL PACIFIC FINANCIAL CORP | screen 06-10: COVID-provision rebound, single-digit real growth | passed |
 | 2026-06-10 | LNN / LINDSAY CORP | screen 06-10: farm-cycle cyclical at record EPS while NA irrigation -19% - classic peak trap; timing study only | maybe |
 | 2026-06-10 | CHTR / CHARTER COMMUNICATIONS, INC. /MO/ | screen 06-10: leveraged equity stub (~4.15x, ~$94B) with accelerating sub losses; 3.8 P/E is the trap | passed |
-| 2026-06-10 | PLMR / Palomar Holdings, Inc. | screen 06-10: small cat-insurance niche, 42% organic confirmed, raised guide; cleanest Lynch profile of top 20 | researching |
+| 2026-06-10 | PLMR / Palomar Holdings, Inc. | researched 06-10: Watchlist - quality insurer, zero-cat peak earnings at 3.1x book; see research/PLMR.md | watchlist |
 | 2026-06-10 | TCBX / Third Coast Bancshares, Inc. | screen 06-10: boring TX bank but Keystone deal inflates growth; needs organic split | maybe |
 | 2026-06-10 | WRB / BERKLEY W R CORP | screen 06-10: quality insurer, but CAGR is hard-market peak and rates now softening | maybe |
 | 2026-06-10 | TBBK / Bancorp, Inc. | screen 06-10: real BaaS-rails niche, but 91% of deposits from fintech partners (concentration) | maybe |

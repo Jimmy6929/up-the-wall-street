@@ -22,8 +22,8 @@ echo "== schema/provenance gate: research/*.data.json =="
 python3 "$SCRIPTS/validate_data.py" research/*.data.json
 
 echo "== markdown source/as-of coverage (advisory) =="
-# lessons.md is an append-only ledger, not a research note - exclude it
-python3 "$SCRIPTS/check_research_markdown.py" --warn-only $(ls research/*.md | grep -v '^research/lessons\.md$')
+# lessons.md and alerts.md are append-only ledgers, not research notes - exclude them
+python3 "$SCRIPTS/check_research_markdown.py" --warn-only $(ls research/*.md | grep -vE '^research/(lessons|alerts)\.md$')
 
 echo "== note staleness (advisory; Lynch rechecks the story every few months) =="
 python3 - <<'PY'

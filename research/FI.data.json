@@ -1,0 +1,89 @@
+{
+  "ticker": "FI",
+  "company": "Fiserv, Inc. (NYSE: FI; EDGAR CIK 798354, formerly FISV)",
+  "category": "Turnaround",
+  "source": "SEC EDGAR companyfacts/submissions CIK0000798354 + company earnings releases + stockanalysis.com quote",
+  "as_of": "2026-06-10",
+  "inputs": {
+    "price": {
+      "value": 53.28,
+      "source": "stockanalysis.com/stocks/fi/ closing quote (4:00 PM EDT)",
+      "as_of": "2026-06-10"
+    },
+    "eps_ttm": {
+      "value": 5.91,
+      "source": "GAAP diluted EPS, trailing twelve months, stockanalysis.com/stocks/fi/ (FY2025 GAAP EPS was 6.34 per SEC EDGAR 10-K). GAAP - includes heavy First Data intangible amortization; company-adjusted EPS TTM is higher (FY2025 adjusted EPS 8.64)",
+      "as_of": "2026-06-10"
+    },
+    "eps_history": {
+      "value": {"2021": 1.99, "2022": 3.91, "2023": 4.98, "2024": 5.38, "2025": 6.34},
+      "source": "GAAP diluted EPS, SEC EDGAR companyfacts CIK0000798354 (EarningsPerShareDiluted, annual 10-K). CAUTION: GAAP 'growth' here is largely First Data amortization roll-off + buybacks, not operating growth - do not use for PEG",
+      "as_of": "FY2021-FY2025"
+    },
+    "adjusted_eps_history": {
+      "value": {"2022": 6.49, "2023": 7.52, "2024": 8.80, "2025": 8.64},
+      "source": "Company-reported (non-GAAP) adjusted EPS from Fiserv Q4 earnings releases: FY2022 release 2023-02-07 ($6.49, +16%); FY2023 release 2024-02-06 ($7.52, +16%); FY2025 release 2026-02-10 ($8.64, -2%, vs $8.80 in 2024). 2025 marks the first adjusted-EPS decline",
+      "as_of": "FY2022-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "Fiserv pays no common dividend (no dividend tags in SEC EDGAR companyfacts; none in FY2025 earnings release)",
+      "as_of": "FY2025"
+    },
+    "shares_outstanding": {
+      "value": 533253986,
+      "source": "SEC EDGAR DEI EntityCommonStockSharesOutstanding, Q1 2026 10-Q cover",
+      "as_of": "2026-05-01"
+    },
+    "total_debt": {
+      "value": 29182000000,
+      "source": "SEC EDGAR Q1 2026 10-Q: LongTermDebtAndCapitalLeaseObligations $27,859M + current portion $1,323M (FY2025 10-K total DebtAndCapitalLeaseObligations was $28,997M at 2025-12-31)",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 829000000,
+      "source": "SEC EDGAR Q1 2026 10-Q, CashAndCashEquivalentsAtCarryingValue (excludes settlement assets)",
+      "as_of": "2026-03-31"
+    },
+    "debt_maturity_profile": {
+      "value": {"next_12mo": 1239000000, "year_2": 2804000000, "year_3": 3885000000, "year_4": 3364000000, "year_5": 6037000000, "after_year_5": 11837000000, "due_within_2_years_total": 4043000000},
+      "source": "SEC EDGAR FY2025 10-K LongTermDebtMaturitiesRepaymentsOfPrincipal* tags, as of 2025-12-31. No acute <2yr wall: $4.04B due through 2027 vs $4.44B FY2025 free cash flow; the larger tower is year 5 ($6.04B)",
+      "as_of": "2025-12-31"
+    },
+    "interest_coverage": {
+      "value": 3.80,
+      "source": "Script-computed: FY2025 OperatingIncomeLoss $5,818M / InterestExpenseNonoperating $1,531M, both SEC EDGAR FY2025 10-K tags",
+      "as_of": "FY2025"
+    },
+    "free_cash_flow": {
+      "value": 4440000000,
+      "source": "Company-reported FY2025 free cash flow $4.44B (vs $5.23B in 2024), Fiserv Q4/FY2025 earnings release 2026-02-10; cross-check EDGAR 10-K: OCF $6,062M - capex $1,763M = $4,299M (script-computed)",
+      "as_of": "FY2025"
+    },
+    "guidance_2026": {
+      "value": {"organic_revenue_growth_pct": "1 to 3", "adjusted_eps_range": "8.00 to 8.30"},
+      "source": "Current (post-cut) guidance: set in Q4/FY2025 release 2026-02-10, REAFFIRMED in Q1 2026 release/8-K 2026-05-05. Q1 2026 actuals: organic revenue -4%, adjusted EPS $1.79 (-16%), GAAP EPS $1.07 (-29%)",
+      "as_of": "2026-05-05"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": -5.7,
+      "source": "ESTIMATE - guided growth, not history: 2026 guided adjusted EPS midpoint $8.15 (range $8.00-$8.30, reaffirmed 2026-05-05) vs FY2025 actual adjusted EPS $8.64 = -5.7% (script-computed). Used deliberately instead of the GAAP-amortization-inflated historical CAGR; negative growth means PEG is not meaningful for this turnaround",
+      "as_of": "2026-05-05"
+    },
+    "institutional_ownership_pct": {
+      "value": 91.6,
+      "source": "fintel.io 13F/13D-G aggregate (1,454 institutional owners), retrieved via web search 2026-06-10",
+      "as_of": "2026-06-10"
+    },
+    "insider_activity": {
+      "value": "Open-market insider BUYING after the Oct 2025 guidance-cut crash (SEC Form 4, transaction code P): director Lance Fritz 10,000 sh @ $65.18 on 2025-10-30 (acc 0000798354-25-000173); CFO Paul Todd 17,000 sh @ $62.41 on 2025-12-01 (acc 0001612508-25-000009); Chief Admin & Legal Officer Adam Rosman 7,900 sh @ $63.19 on 2025-12-02 (acc 0001549373-25-000003). All three purchases are above the current $53.28 price. No open-market disposals found in the Oct 2025-Mar 2026 Form 4s sampled",
+      "source": "SEC EDGAR Form 4 filings, CIK 798354 issuer submissions",
+      "as_of": "2026-03-31"
+    },
+    "buybacks": {
+      "value": "Aggressive and sustained: FY2025 repurchased 32.2M shares for $5.6B (Q4/FY2025 release 2026-02-10). Weighted avg diluted shares FY2021-FY2025: 671.6M, 647.9M, 615.9M, 582.1M, 549.0M = -18.3% over 4 years (script-computed); 533.3M shares outstanding at 2026-05-01. Note: buybacks were partly debt-funded - total debt rose to $29.0B by end-2025",
+      "source": "SEC EDGAR WeightedAverageNumberOfDilutedSharesOutstanding (annual 10-K) + Fiserv Q4/FY2025 earnings release 2026-02-10",
+      "as_of": "2026-05-01"
+    }
+  }
+}

@@ -50,6 +50,8 @@ The agent is built around Lynch's actual rhythm: **find → investigate → deci
 
 **5. Re-check the story, not the price.** Quarterly (or when earnings land), run `/recheck <TICKER>` — it re-runs the numbers and the three monitoring questions and decides Hold / Add / Sell *by category rules*. `scripts/verify` nags when a note hasn't been rechecked in ~100 days. Run `/portfolio-review` a couple of times a year for category balance, followability, and watering-the-weeds. The only valid reason to sell is a **broken story** — never "it's down", never "it's up", and a stock that's down 35% is not automatically a bargain.
 
+**5b. Or let the watcher do the watching.** Each note's upgrade/re-examine triggers are compiled into `research/triggers.json`; `scripts/watch-triggers` polls SEC EDGAR (free) for exactly those events — new 10-K/10-Q/8-Ks, Form 4 *open-market buys*, the notes' valuation thresholds — and `scripts/watch-cron` (install one crontab line; see its header) auto-runs a headless `/recheck` on whatever fires, logs to `research/alerts.md`, and sends a Monday heartbeat so silence provably means "nothing happened". Lynch monitors events, not the screen — so the watcher does too.
+
 **6. Don't ask it the questions it's designed to refuse.** "Where's the market headed", "is now a good time", options/shorting — it will decline and redirect to a researchable company (that's ch. 05 and ch. 19, not stubbornness). Pre-revenue lottery tickets get an honest "outside what the method can analyze."
 
 ### Keeping the agent trustworthy (maintenance)
@@ -60,8 +62,33 @@ The agent is built around Lynch's actual rhythm: **find → investigate → deci
 | After editing `playbook/`, skills, or scripts | `scripts/evals --smoke` | The method's regression test: re-runs the adversarial trap cases (cyclical peak, hot stock, whisper stock, derivatives, broken-story sell) headlessly and grades them. Costs real tokens. |
 | Before trusting a big method change | `scripts/evals` | All cases at pass^3 — consistency, not best-of. |
 | After any escalation or rubric edit (and ~monthly) | `/review-fixtures`, `/review-retro` | Recalibrates the self-review judges against the frozen fixtures; keep-or-revert. |
+| Daily, unattended (cron) | `scripts/watch-cron` | Free EDGAR polling of every note's written triggers; headless `/recheck` only when one fires; Monday heartbeat. |
 
 One habit ties it together: when a run surprises you (a data quirk, a near-miss, a source that disagreed), it appends one line to `research/lessons.md` — skim it occasionally; it's the agent's memory of where it almost went wrong.
+
+### Using the watchlist monitor (`scripts/watch-*`)
+
+The monitor is **not a background app** — nothing stays running between checks. Each run starts, polls the free SEC EDGAR API for the events your notes are waiting on (new 10-K/10-Q/8-Ks, Form 4 *open-market buys*, the notes' valuation thresholds from `research/triggers.json`), and exits in ~5 seconds. The LLM is involved **only** when a trigger fires (~8–12 events/year across a full watchlist) — quiet days cost $0.
+
+**Run it by hand (no setup, safe anytime):**
+
+```bash
+scripts/watch-triggers --check     # poll now; prints "0 triggers fired" or 🔔 + details
+scripts/watch-triggers --digest    # the one-line heartbeat (names watched, next known event)
+cat research/alerts.md             # every alert ever fired (append-only record)
+```
+
+The very first `--check` *baselines*: it memorizes each ticker's existing filings without alerting, so history never floods you. When a trigger does fire, the next move is `/recheck <TICKER>` in a Claude Code session — a fired trigger is a reportable fact, **never a verdict**.
+
+**Arm it (automatic weekday mornings):** add one line to your scheduler — `crontab -e`, then paste the line from the top of `scripts/watch-cron`. From then on macOS runs it at 08:30 on weekdays with **no Terminal window and no Claude session open** — `scripts/watch-cron` does the poll, auto-runs a headless `/recheck` on anything that fired, sends a desktop notification, and emits a Monday heartbeat. macOS caveat: plain cron **skips** a run if the Mac is asleep at 08:30 (alerts are delayed to the next run, never lost — filings don't expire); a launchd agent fixes this by running missed jobs on wake.
+
+**How you know it's alive (when armed):**
+1. the **Monday heartbeat** notification — its whole job is proving liveness;
+2. `cat .watch-cron.log` — one entry per morning it actually ran;
+3. `crontab -l` — the schedule entry exists;
+4. `cat research/alerts.md` — what it has caught.
+
+**Stop it:** `crontab -e`, delete the line, save — that's a complete stop. Nothing resides in memory, so there's no process to kill; the scripts go back to being inert files. (Unarmed — the state this repo ships in — there is nothing to stop: it runs only in the seconds after you type the command.)
 
 ## Layout
 
