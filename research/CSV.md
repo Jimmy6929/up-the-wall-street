@@ -2,6 +2,7 @@
 title: CSV — Carriage Services, Inc.
 ticker: CSV
 company: Carriage Services, Inc.
+type: research-note
 category: Slow grower (small-cap death-care roll-up; moderate, largely acquisition-driven growth)
 verdict: Watchlist
 peg: 2.80 (rich on 5% fwd; ~1.9 on bullish 7.4%)

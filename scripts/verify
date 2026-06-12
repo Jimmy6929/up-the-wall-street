@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # verify - the single "can this repo still be trusted?" gate.
 #
-# Blocking (exit 1 on failure): the unit-test suites (both roots) and the bulk
-# schema/provenance gate over every research/*.data.json. Advisory (never
+# Blocking (exit 1 on failure): the unit-test suites (both roots), the bulk
+# schema/provenance gate over every research/*.data.json, and the generated-index
+# freshness check (research/INDEX.md must match its sources). Advisory (never
 # blocks): the markdown source/as-of coverage check, run with --warn-only so its
 # findings print but a young checker can't block work before it's tuned. Promote
 # it to blocking by dropping --warn-only once it's proven low-noise.
@@ -21,9 +22,12 @@ python3 -m unittest discover -s tests -p 'test_*.py'      # split root (test_boo
 echo "== schema/provenance gate: research/*.data.json =="
 python3 "$SCRIPTS/validate_data.py" research/*.data.json
 
+echo "== research index freshness (blocking; research/INDEX.md is generated) =="
+python3 "$SCRIPTS/build_index.py" --check
+
 echo "== markdown source/as-of coverage (advisory) =="
-# lessons.md and alerts.md are append-only ledgers, not research notes - exclude them
-python3 "$SCRIPTS/check_research_markdown.py" --warn-only $(ls research/*.md | grep -vE '^research/(lessons|alerts)\.md$')
+# lessons.md and alerts.md are append-only ledgers, INDEX.md is generated - not research notes
+python3 "$SCRIPTS/check_research_markdown.py" --warn-only $(ls research/*.md | grep -vE '^research/(lessons|alerts|INDEX)\.md$')
 
 echo "== note staleness (advisory; Lynch rechecks the story every few months) =="
 python3 - <<'PY'
@@ -31,7 +35,7 @@ import datetime, glob, re
 STALE_DAYS = 100
 today = datetime.date.today()
 for path in sorted(glob.glob("research/*.md")):
-    if path.endswith("lessons.md"):          # the lessons ledger is not a note
+    if path.endswith(("lessons.md", "alerts.md", "INDEX.md")):   # ledgers + generated index, not notes
         continue
     m = re.search(r"^reviewed:\s*(\d{4}-\d{2}-\d{2})", open(path).read(), re.MULTILINE)
     if not m:

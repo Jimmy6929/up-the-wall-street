@@ -30,7 +30,8 @@ Data path with graceful degradation: **SEC EDGAR script → web search → ask t
 - Research notes go in `research/<TICKER>.md` (from `templates/research-note.md`); keep the `research/<TICKER>.data.json` beside it as the provenance record.
 - Update `watchlist.md`, `portfolio.md`, and `leads.md` as theses change.
 - Verdicts are justified **only** by fundamentals (category, earnings growth, PEG/valuation, balance sheet, story, risks) — never by price action, momentum, "the next [winner]", the excitement of the story, or any market/economic forecast.
-- **Scan artifacts use fixed, never-crossed names:** a full-universe `/scan` writes `scan-results.md`; an offline `--fixtures` run writes `scan-results.fixtures.md` and must never clobber the real sweep; `scan-results.sample.md` is reserved for a future live sample.
+- **Scan artifacts use fixed, never-crossed names** and live in `scans/`: a full-universe `/scan` writes `scans/scan-results.md`; an offline `--fixtures` run writes `scans/scan-results.fixtures.md` and must never clobber the real sweep; `scans/scan-results.sample.md` is reserved for a future live sample.
+- `research/INDEX.md` is **generated** by `build_index.py` — never edit it by hand; regenerate after writing or updating a note (freshness is enforced by `scripts/verify`).
 
 ## Definition of done (for a research run)
 A note passes only if it has: the correct **category**; script-computed **numbers** with sources; a plain-language **two-minute drill**; an independent **bear case**; the category-specific **checklist**; and a fundamentals-justified **verdict**. These are exactly what the `evals/` cases check — when in doubt, run a relevant eval case.

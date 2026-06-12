@@ -29,7 +29,7 @@ In Claude Code, **launched from this repo**, run a slash command — or just ask
 | Command | What it does |
 |---|---|
 | `/research <TICKER>` | The full pipeline for **one** stock: classify → screen → script-computed numbers → two-minute story → skeptic/bear case → Buy / Watch / Pass verdict. Writes `research/<TICKER>.md` (+ `.data.json`). |
-| `/scan [tickers]` | Scan the **whole US market** (or a subset) for candidates: a deterministic EDGAR funnel ranks names by PEG, then a parallel green/red-flag screen recommends 1–3 for `/research`. Writes `scan-results.md`, appends *leads* (never verdicts) to `leads.md`. See [playbook/02a](playbook/02a-screen-at-scale.md). |
+| `/scan [tickers]` | Scan the **whole US market** (or a subset) for candidates: a deterministic EDGAR funnel ranks names by PEG, then a parallel green/red-flag screen recommends 1–3 for `/research`. Writes `scans/scan-results.md`, appends *leads* (never verdicts) to `leads.md`. See [playbook/02a](playbook/02a-screen-at-scale.md). |
 | `/screen [tickers]` | Quick green-flag / red-flag triage over `leads.md` (or the tickers you pass) to decide what deserves a full run. |
 | `/recheck <TICKER>` | Re-test a holding's story, refresh the numbers, run the 3 monitoring questions → Hold / Add / Sell. Updates `watchlist.md` / `portfolio.md`. |
 | `/portfolio-review` | Whole-portfolio check: category balance, followability, watering-the-weeds, concentration, stale stories. |
@@ -100,22 +100,23 @@ evals/            labeled cases the agent must pass (incl. adversarial traps)
 .claude/skills/   the pipeline + scripts, surfaced as slash commands
 .claude/agents/   numbers-analyst (data) and skeptic (bear case)
 research/         output: one note + one .data.json per ticker
+research/INDEX.md generated verdict-grouped index of the notes (build_index.py; checked by scripts/verify)
 watchlist.md      leads under consideration
 portfolio.md      recommended theses
 leads.md          raw idea intake (ch. 06)
-scan-results.md   latest full-universe /scan output (ranked candidates + manual-review + tallies)
-scan-results.fixtures.md   offline --fixtures verification output (never overwrites the real sweep)
+scans/scan-results.md   latest full-universe /scan output (ranked candidates + manual-review + tallies)
+scans/scan-results.fixtures.md   offline --fixtures verification output (never overwrites the real sweep)
 tests/fixtures/   offline records for the screener's trap tests
 scripts/verify    one local gate: tests + schema/provenance + markdown source coverage
 ```
 
 ### Scan artifacts (fixed names, never crossed)
 
-A full-universe `/scan` writes **`scan-results.md`**. An offline `--fixtures` verification run writes **`scan-results.fixtures.md`** — it is offline by contract and must **never** clobber the real sweep's `scan-results.md` (regression-pinned by `tests/test_universe_screen.py`). `scan-results.sample.md` is reserved for a future small live sample (no `--sample` mode today).
+A full-universe `/scan` writes **`scans/scan-results.md`**. An offline `--fixtures` verification run writes **`scans/scan-results.fixtures.md`** — it is offline by contract and must **never** clobber the real sweep's `scans/scan-results.md` (regression-pinned by `test_universe_screen.py`). `scans/scan-results.sample.md` is reserved for a future small live sample (no `--sample` mode today).
 
 ### Verifying the repo
 
-Run **`scripts/verify`** before trusting the repo (or after touching scripts, data, or notes). It runs the unit-test suites (both roots), the bulk **schema/provenance gate** (`validate_data.py research/*.data.json`, which *fails closed* — a `.data.json` with a missing required field or an unsourced value cannot pass), and an advisory **markdown source/as-of coverage** check (`check_research_markdown.py`). Tests + schema block; markdown is warn-only until tuned.
+Run **`scripts/verify`** before trusting the repo (or after touching scripts, data, or notes). It runs the unit-test suites (both roots), the bulk **schema/provenance gate** (`validate_data.py research/*.data.json`, which *fails closed* — a `.data.json` with a missing required field or an unsourced value cannot pass), a blocking **generated-index freshness check** (`build_index.py --check` — `research/INDEX.md` must match its sources), and an advisory **markdown source/as-of coverage** check (`check_research_markdown.py`). Tests + schema + index block; markdown is warn-only until tuned.
 
 ## Setup
 

@@ -272,34 +272,35 @@ class TestFixturesStayOffline(unittest.TestCase):
 
 class TestFixturesResultsPathIsolation(unittest.TestCase):
     def test_fixtures_run_does_not_clobber_real_scan_results(self):
-        # A bare --fixtures run (no --results) must write scan-results.fixtures.md
-        # and leave a real scan-results.md untouched - the regression that
+        # A bare --fixtures run (no --results) must write scans/scan-results.fixtures.md
+        # and leave a real scans/scan-results.md untouched - the regression that
         # destroyed the live sweep's provenance during verification.
         import contextlib
         import io
+        import shutil
         import sys
         import tempfile
         saved_yf, saved_argv, saved_cwd = u.yf, sys.argv, os.getcwd()
         u.yf = None                                  # fixtures carry their own price
         d = tempfile.mkdtemp()
-        with open(os.path.join(d, "scan-results.md"), "w") as fh:
+        os.makedirs(os.path.join(d, "scans"))
+        with open(os.path.join(d, "scans", "scan-results.md"), "w") as fh:
             fh.write("REAL SWEEP - DO NOT CLOBBER")
         sys.argv = ["universe_screen.py", "--fixtures", FIX]   # note: no --results
         try:
             os.chdir(d)
             with contextlib.redirect_stdout(io.StringIO()):
                 u.main()
-            self.assertTrue(os.path.exists(os.path.join(d, "scan-results.fixtures.md")))
-            with open(os.path.join(d, "scan-results.md")) as fh:
+            self.assertTrue(os.path.exists(os.path.join(d, "scans", "scan-results.fixtures.md")))
+            with open(os.path.join(d, "scans", "scan-results.md")) as fh:
                 self.assertEqual(fh.read(), "REAL SWEEP - DO NOT CLOBBER")
+            # nothing may land at the pre-reorg root locations
+            self.assertFalse(os.path.exists(os.path.join(d, "scan-results.md")))
+            self.assertFalse(os.path.exists(os.path.join(d, "scan-results.fixtures.md")))
         finally:
             u.yf, sys.argv = saved_yf, saved_argv
             os.chdir(saved_cwd)
-            for f in ("scan-results.md", "scan-results.fixtures.md"):
-                p = os.path.join(d, f)
-                if os.path.exists(p):
-                    os.remove(p)
-            os.rmdir(d)
+            shutil.rmtree(d, ignore_errors=True)   # never mask a real assertion failure
 
 
 def _q(start, end, val):

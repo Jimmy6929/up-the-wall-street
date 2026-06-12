@@ -15,8 +15,8 @@ Find candidates across the market so the user isn't limited to tickers they alre
 1. **Run the engine** (deterministic, never compute these by hand):
    - Subset: `python3 .claude/skills/research/scripts/universe_screen.py --tickers AAPL,KO,... --write-leads`
    - Full universe: `python3 .claude/skills/research/scripts/universe_screen.py --write-leads` (slower; throttled EDGAR + yfinance).
-   - It writes `scan-results.md` (ranked candidates + a **manual-review** section + reasoned drop tallies + the bias disclaimer) and, with `--write-leads`, appends the top-N to `leads.md` as labeled leads.
-   - Read `scan-results.md`. Do **not** re-derive or "remember" any number — the script is the source of truth.
+   - It writes `scans/scan-results.md` (ranked candidates + a **manual-review** section + reasoned drop tallies + the bias disclaimer) and, with `--write-leads`, appends the top-N to `leads.md` as labeled leads.
+   - Read `scans/scan-results.md`. Do **not** re-derive or "remember" any number — the script is the source of truth.
 
 2. **Fan out the qualitative screen** over the **ranked** candidates. In a single message, launch parallel subagents (Agent tool), **~5 candidates each**, each applying [playbook/02-screen.md](../../../playbook/02-screen.md) to its batch:
    - Treat the script's category as a **guess** — re-classify (size, maturity, economic sensitivity, hidden assets), since the script can't tell a slow-monotone **cyclical** from a stalwart.
@@ -25,7 +25,7 @@ Find candidates across the market so the user isn't limited to tickers they alre
    - Each subagent returns a short table: Ticker | re-classified category | green | red | lean.
 
 3. **Completeness critic.** Launch one more subagent to audit the run:
-   - Did a whole **category** silently vanish (e.g. all stalwarts dropped by a frames quirk)? Check the drop tallies in `scan-results.md` by reason.
+   - Did a whole **category** silently vanish (e.g. all stalwarts dropped by a frames quirk)? Check the drop tallies in `scans/scan-results.md` by reason.
    - Is any **ranked** name a likely cyclical-at-peak the EPS filter missed (low PEG + capital-intensive/commodity business)? Flag it down to manual.
    - Did any **manual-review** name get set aside for a bad reason and actually deserve a look?
 

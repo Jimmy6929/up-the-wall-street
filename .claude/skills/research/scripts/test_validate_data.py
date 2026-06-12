@@ -80,7 +80,8 @@ class TestFailsClosed(unittest.TestCase):
 
     def test_unsourced_numeric_value_is_error(self):
         d = _doc()
-        d.pop("source"); d.pop("as_of")                 # no top-level provenance to fall back on
+        d.pop("source")                                 # no top-level provenance to fall back on
+        d.pop("as_of")
         d["inputs"]["price"] = {"value": 10.0}          # and no field-level provenance
         r = v.validate_doc(d, today=TODAY)
         self.assertFalse(r["ok"])
@@ -88,7 +89,8 @@ class TestFailsClosed(unittest.TestCase):
 
     def test_unsourced_qualitative_value_is_error(self):
         d = _doc()
-        d.pop("source"); d.pop("as_of")
+        d.pop("source")
+        d.pop("as_of")
         d["inputs"]["insider_activity"] = {"value": "net selling"}   # prose, but unsourced
         r = v.validate_doc(d, today=TODAY)
         self.assertFalse(r["ok"])
@@ -113,7 +115,8 @@ class TestCategory(unittest.TestCase):
         self.assertTrue(r["ok"], r["errors"])
 
     def test_missing_category_warns_not_errors(self):
-        d = _doc(); d.pop("category")
+        d = _doc()
+        d.pop("category")
         r = v.validate_doc(d, today=TODAY)
         self.assertTrue(r["ok"])
         self.assertTrue(any("category" in w for w in r["warnings"]))
@@ -161,7 +164,8 @@ class TestCLI(unittest.TestCase):
 
     def test_bulk_exits_1_when_any_file_fails(self):
         good = _doc()
-        bad = _doc(); bad["inputs"].pop("price")
+        bad = _doc()
+        bad["inputs"].pop("price")
         with tempfile.TemporaryDirectory() as d:
             gp, bp = os.path.join(d, "good.data.json"), os.path.join(d, "bad.data.json")
             with open(gp, "w") as fh:

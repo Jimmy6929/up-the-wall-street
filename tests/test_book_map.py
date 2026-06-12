@@ -35,7 +35,7 @@ EXPECTED_CONCEPTS = [
 VALID_STATUSES = {"FAITHFUL", "PARTIAL", "MISSING"}
 
 # Top-level repo locations a backticked path may legitimately point into.
-PATH_ROOTS = ("playbook/", ".claude/", "templates/", "evals/", "tests/", "research/")
+PATH_ROOTS = ("playbook/", ".claude/", "templates/", "evals/", "tests/", "research/", "scans/")
 BARE_FILES = {"CLAUDE.md", "README.md", "leads.md", "watchlist.md", "portfolio.md"}
 
 PATH_RE = re.compile(r"`([A-Za-z0-9._/-]+\.(?:md|py|json))`")

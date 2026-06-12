@@ -469,9 +469,9 @@ def main():
     ap.add_argument("--no-price", action="store_true", help="Stage A quality only; skip price")
     ap.add_argument("--date", default=None, help="as-of date for output (default today)")
     ap.add_argument("--results", default=None,
-                    help="output path for the ranked table (default scan-results.md; a "
-                         "--fixtures run defaults to scan-results.fixtures.md so verification "
-                         "never clobbers the real sweep output)")
+                    help="output path for the ranked table (default scans/scan-results.md; a "
+                         "--fixtures run defaults to scans/scan-results.fixtures.md so "
+                         "verification never clobbers the real sweep output)")
     ap.add_argument("--leads", default="leads.md", help="leads.md to append top-N to")
     ap.add_argument("--write-leads", action="store_true", help="append top-N to --leads")
     ap.add_argument("--ua", default=os.environ.get("SEC_EDGAR_USER_AGENT",
@@ -535,9 +535,12 @@ def main():
     result = screen_records(records, args.years)
     md = render_scan_results(result, date_str)
     # A --fixtures (verification) run must never overwrite the real sweep's
-    # scan-results.md; give it its own default unless the caller named a path.
-    results_path = args.results or (
-        "scan-results.fixtures.md" if args.fixtures else "scan-results.md")
+    # scans/scan-results.md; give it its own default unless the caller named a path.
+    results_path = args.results or os.path.join(
+        "scans", "scan-results.fixtures.md" if args.fixtures else "scan-results.md")
+    parent = os.path.dirname(results_path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     with open(results_path, "w") as fh:
         fh.write(md)
     print(md)

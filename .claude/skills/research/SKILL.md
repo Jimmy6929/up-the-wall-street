@@ -24,7 +24,7 @@ Lynch research: $1
 - [ ] 5. Story — playbook/04 → two-minute drill (what / why it grows / what breaks it)
 - [ ] 6. Bear case — delegate to skeptic
 - [ ] 7. Verdict — playbook/05 → Buy candidate / Watchlist / Pass, fundamentals-justified
-- [ ] 8. Write research/<TICKER>.md + save <TICKER>.data.json + update watchlist.md; if Buy, surface the mirror test (g9)
+- [ ] 8. Write research/<TICKER>.md + save <TICKER>.data.json + update watchlist.md + regenerate research/INDEX.md (build_index.py); if Buy, surface the mirror test (g9)
 - [ ] 9. Lesson — if anything in this run surprised you (a data quirk, a near-miss, a gate that almost slipped), append ONE line to research/lessons.md; skip silently if nothing did
 ```
 
@@ -48,7 +48,7 @@ Lynch research: $1
 
 **7. Verdict.** Follow [playbook/05-checklist.md](../../../playbook/05-checklist.md). Run the universal + category-specific checklist and map it to **Buy candidate / Watchlist / Pass-or-Avoid**, justified only by fundamentals. Apply the hard stops (cyclical at peak → not a buy on a low P/E; whisper stock → Pass). Set sell triggers in advance.
 
-**8. Write the note.** Create `research/<TICKER>.md` from [templates/research-note.md](../../../templates/research-note.md), filling every section and citing a source + as-of date for each figure. Keep the `research/<TICKER>.data.json` beside it. Update `watchlist.md` (and `portfolio.md` only if the user is actually adding a position). Then give the user a short summary: category, verdict, the one-line story, the key number (PEG or the cyclical caveat), and the main bear-case point.
+**8. Write the note.** Create `research/<TICKER>.md` from [templates/research-note.md](../../../templates/research-note.md), filling every section and citing a source + as-of date for each figure. Keep the `research/<TICKER>.data.json` beside it. Update `watchlist.md` (and `portfolio.md` only if the user is actually adding a position), then regenerate the research index: `python3 .claude/skills/research/scripts/build_index.py` (never edit `research/INDEX.md` by hand — `scripts/verify` blocks on it being stale). Then give the user a short summary: category, verdict, the one-line story, the key number (PEG or the cyclical caveat), and the main bear-case point.
 
 If the verdict is **Buy candidate**, also surface the **mirror test** (g9, ch. 04) as the human's own call — *can you hold through a 30–50% drawdown without panic-selling; is this money you won't need soon; can you ignore the price for years?* Present it as their pre-condition to act on, **not** as something you score, and note plainly that it does not change the fundamentals verdict above.
 

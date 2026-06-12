@@ -20,7 +20,7 @@ Re-examine the story of **$1**. Buying isn't the end of the work; monitoring is.
    - *Add* when a fast grower is in its proven, not-yet-saturated middle innings, or a Watchlist name has hit your pre-set fear-discount price.
    - *Sell* when the **story has played out or broken** for the category (fast grower's runway gone / P/E ballooned; cyclical near peak; turnaround fully recovered; asset value unlocked).
    - *Hold* when the story is intact — let winners run; do not trim a winner just because it's up (watering the weeds).
-6. **Update** `research/<TICKER>.md` (reviewed date + the re-told story), `watchlist.md`, and `portfolio.md`. Summarize the decision and the one reason for it.
+6. **Update** `research/<TICKER>.md` (reviewed date + the re-told story), `watchlist.md`, and `portfolio.md`, then regenerate the research index: `python3 .claude/skills/research/scripts/build_index.py` (never edit `research/INDEX.md` by hand). Summarize the decision and the one reason for it.
 7. **Lesson (optional, one line).** If anything in the recheck surprised you — a sell trigger that fired, a number that didn't refresh cleanly, a story drift you nearly rationalized — append one dated line to `research/lessons.md`. Skip silently if nothing did.
 
 > [!warning] Forbidden reasons to sell
