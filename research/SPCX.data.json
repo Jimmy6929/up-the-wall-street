@@ -1,0 +1,100 @@
+{
+  "ticker": "SPCX",
+  "company": "Space Exploration Technologies Corp",
+  "cik": 1181412,
+  "category": "Avoid (hype over fundamentals)",
+  "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination)",
+  "as_of": "2026-06-12",
+  "_note": "Day-one IPO (2026-06-12). EDGAR companyfacts/XBRL empty for SPCX; all fundamentals hand-sourced from the final 424B4 prospectus. Financials retrospectively combine SpaceX, xAI and X Holdings. All derived figures computed in python, none by hand.",
+  "inputs": {
+    "price": {
+      "value": 164.92,
+      "source": "Hand-sourced day-one quote: Investing.com $164.98 and CNBC live coverage (opened $150.00, high $168.75), cross-checked against Nasdaq intraday via Yahoo Finance chart API $164.92 (regularMarketTime 2026-06-12T16:31:27Z, 12:31 ET) - value used is the timestamped cross-checked figure. First day of trading; NOT a yfinance bulk-screening quote.",
+      "as_of": "2026-06-12"
+    },
+    "ipo_price": {
+      "value": 135.0,
+      "source": "424B4 cover page (fixed-price offering of 555,555,555 Class A shares); TechCrunch 2026-06-11 'SpaceX officially prices shares at $135'",
+      "as_of": "2026-06-11"
+    },
+    "eps_ttm": {
+      "value": -1.69,
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 FY2025 GAAP basic net loss per share, as reported (summary financial data). Latest-FY figure used as eps_ttm per repo convention; true TTM through Q1-2026 is MORE negative: TTM net loss $8,685M (python-computed: FY2025 -$4,937M + Q1'26 -$4,276M - Q1'25 -$528M). Company pro-forma FY2025 EPS $(0.51) on 9,649M pro-forma shares \u2014 company-adjusted, not GAAP.",
+      "as_of": "FY2025 (ended 2025-12-31)",
+      "reason": "EPS is genuinely negative; P/E and PEG are not computable. Documented, not a gap."
+    },
+    "eps_history": {
+      "value": {
+        "2023": -1.68,
+        "2024": 0.01,
+        "2025": -1.69
+      },
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 GAAP basic net income (loss) per share as reported: FY2023 $(1.68), FY2024 $0.01, FY2025 $(1.69). Weighted-avg basic shares 2,759M/2,848M/2,926M (pre-Preferred-Conversion share base; not comparable to post-IPO 13.08B count).",
+      "as_of": "FY2023-FY2025"
+    },
+    "dividend_per_share": {
+      "value": 0,
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 Dividend policy: 'We do not anticipate declaring or paying any cash dividends... in the foreseeable future'; credit agreements restrict dividends.",
+      "as_of": "2026-06-12"
+    },
+    "shares_outstanding": {
+      "value": 13075865175,
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 capitalization table, pro forma as adjusted: 7,380,196,910 Class A + 5,695,668,265 Class B = 13,075,865,175 (python-summed). Class A trades as SPCX (Nasdaq + Nasdaq Texas); Class B is supervoting, elects 51% of directors, held mostly by Musk. Excludes greenshoe (up to +83.3M Class A => 7,463,530,243 A if exercised), 133.8M A + 358.2M B option shares, and RSUs. Class B count includes 1,302,072,285 unvested Musk performance shares (Mars-colony / orbital-datacenter milestones).",
+      "as_of": "2026-06-12 (pro forma as adjusted, based on 2026-03-31 counts)"
+    },
+    "total_debt": {
+      "value": 29111000000,
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 capitalization table as of 2026-03-31: total long-term debt $29,111M (SpaceX Bridge Loan $20,000M + X 2027/2030 Notes $27M + Other Financings $9,105M incl. AI-infrastructure failed sale-leasebacks, less $21M deferred costs). NOTE: Bridge Loan terms REQUIRE applying an amount equal to IPO net proceeds (~$74.4B) to repay it within six months \u2014 pro-forma-as-adjusted column still shows it outstanding. Excludes $2,069M Spectrum Credit Agreement commitment.",
+      "as_of": "2026-03-31"
+    },
+    "cash": {
+      "value": 90300000000,
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 capitalization table, pro forma as adjusted cash & equivalents $90,300M (= actual $15,852M at 2026-03-31 + ~$74.4B IPO net proceeds). Excludes $7,823M short-term marketable securities (2026-03-31).",
+      "as_of": "2026-06-12 (pro forma as adjusted on 2026-03-31 balance sheet)"
+    },
+    "long_term_growth_estimate_pct": {
+      "value": null,
+      "source": "not available",
+      "as_of": "2026-06-12",
+      "reason": "Day-one IPO: no analyst consensus published yet; prospectus contains no earnings projections. EPS history spans a sign change so EPS CAGR is undefined. Trailing REVENUE growth (python-computed, see revenue_history) is the only proven growth on record."
+    },
+    "institutional_ownership_pct": {
+      "value": null,
+      "source": "not available",
+      "as_of": "2026-06-12",
+      "reason": "Day-one IPO: no 13F aggregate exists yet (first filings reflecting SPCX would cover Q2 2026, due mid-August 2026). Documented gap, not an omission."
+    },
+    "insider_activity": {
+      "value": "No Form 4 sales possible yet (day one). Nine Form 3 initial ownership filings 2026-06-11. Post-offering, Elon Musk beneficially owns 849,494,440 Class A + 5,569,053,075 Class B shares (incl. 350,000,000 Class B option shares) = ~84.4% of combined voting power (~82.4% per cover page ex-options measure); ~49.1% economic stake (python-computed, incl. option shares in numerator only). Controlled company under Nasdaq rules. Lock-up: staged 180-day structure \u2014 up to 911.5M sh (+455.8M more if price >=30% above $135 IPO price for 5 of 10 days into the first earnings release) tradable 2 days after first earnings release; 7% tranches (~319-328M sh) release at days 70/90/105/120/135 (2026-08-20 onward); directed-share-program shares (5% of offering) NOT locked up.",
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 'Shares Eligible for Future Sale' lock-up table, principal-stockholder/anti-takeover sections, cover page; EDGAR Form 3 filings 2026-06-11",
+      "as_of": "2026-06-12"
+    },
+    "revenue_history_millions": {
+      "value": {
+        "2023": 10387,
+        "2024": 14015,
+        "2025": 18674
+      },
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 summary consolidated statements of operations. YoY growth python-computed: FY2024 +34.9%, FY2025 +33.2%. Q1-2026 $4,694M vs Q1-2025 $4,067M = +15.4% YoY (decelerating). FY2025 segment split: Space (launch) $4,086M; Connectivity (Starlink) $11,387M (+49.8% YoY); AI (xAI/X) $3,201M. TTM revenue $19,301M (python-computed).",
+      "as_of": "FY2023-FY2025, Q1-2026"
+    },
+    "net_income_history_millions": {
+      "value": {
+        "2023": -4628,
+        "2024": 791,
+        "2025": -4937
+      },
+      "source": "SEC 424B4 prospectus filed 2026-06-12, CIK 1181412, acc. 0001628280-26-042639 (combined entity: SpaceX + xAI eff. 2026-02-02 + X Holdings eff. 2025-03-28, common-control retrospective combination) \u2014 summary consolidated statements of operations, GAAP net income (loss). Q1-2026: -$4,276M (vs Q1-2025 -$528M); losses driven by AI segment (FY2025 AI loss from operations -$6,355M; AI capex $12,727M FY2025, $7,723M Q1-2026 alone).",
+      "as_of": "FY2023-FY2025, Q1-2026"
+    },
+    "valuation_context": {
+      "value": {
+        "market_cap_at_current_price_usd": 2156471684661,
+        "market_cap_at_ipo_price_usd": 1765241798625,
+        "ps_ratio_ttm_at_current_price": 111.7
+      },
+      "source": "python-computed from sourced inputs: $164.92 x 13,075,865,175 sh = ~$2.16T; $135.00 x same = ~$1.77T (matches reported ~$1.77T debut valuation, CNBC/TechCrunch); P/S = mkt cap / TTM revenue $19,301M = ~111.7x. P/S is CONTEXT ONLY - the repo's PEG framework needs positive earnings, which SPCX does not have.",
+      "as_of": "2026-06-12"
+    }
+  }
+}
